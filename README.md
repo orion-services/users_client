@@ -1,7 +1,7 @@
-# Orion Talk CLI
+# Orion Talk Client
 
-Orion Talk CLI is a simple command line application to test the Orion Talk services APIs.
+Orion Talk Client is a library to provide access to Orion Talk Service.
 
-## Running
+## Running in command line
 
-With [dart](https://dart.dev) installed in your computer, go to the bin directory and execute `dart main.dart`
+With [dart](https://dart.dev) installed in your computer, go to the `bin` directory and execute `dart main.dart`

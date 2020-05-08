@@ -1,7 +1,7 @@
 name: orion_talk_client
-description: The Orion Talk Service command-line application
+description: Orion Talk Client
 version: 1.0.0
-# homepage: https://www.example.com
+homepage: https://github.com/orion-services/talk_client
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

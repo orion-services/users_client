@@ -1,3 +1,3 @@
-# Orion Talk CLI documentation
+# Orion Talk Client
 
-Orion Talk CLI is a simple command line application used to invoke both an Web Service and Web Socket APIs
+Orion Talk Client is a library to provide access to Orion Talk Service.
