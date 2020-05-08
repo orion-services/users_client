@@ -10,13 +10,27 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+class BaseClient {
+  String host;
+  String port;
+  String serviceEndpoint;
+  String socketEndpoint;
+  String api;
+  String serviceURL;
+  String socketURL;
 
-import 'package:orion_talk_client/cli/cli.dart';
+  String token;
 
-void main(List<String> arguments) async {
-  var cli = TalkCLI();
-  var loop = true;
-  while (loop) {
-    loop = await cli.menu();
+  BaseClient() {
+    host = 'localhost';
+    port = '9081';
+    serviceEndpoint = 'talk';
+    socketEndpoint = 'talkws';
+    api = 'api/v1.0';
+
+    serviceURL =
+        'http://' + host + ':' + port + '/' + serviceEndpoint + '/' + api + '/';
+
+    socketURL = 'ws://' + host + ':' + port + '/' + socketEndpoint + '/';
   }
 }

@@ -12,21 +12,21 @@
 ///  limitations under the License.
 import 'dart:io';
 import 'dart:convert';
+import 'package:orion_talk_client/service_client.dart';
 import 'package:prompts/prompts.dart' as prompts;
-import 'package:orion_talk_cli/client.dart';
 
 /// CLI client for Orion Talk micro service
 class TalkCLI {
   String _host;
   String _port;
   String _token;
-  TalkClient _talk;
+  TalkWebServiceClient _talk;
 
   TalkCLI() {
     _host = 'localhost';
     _port = '9081';
     _token = '';
-    _talk = TalkClient();
+    _talk = TalkWebServiceClient();
   }
 
   // Prints the menu
@@ -83,8 +83,8 @@ class TalkCLI {
     questionPort();
 
     // set talk client
-    _talk.setHost(_host);
-    _talk.setPort(_port);
+    _talk.host = _host;
+    _talk.port = _port;
   }
 
   /// Executes the menu option to create a new channel
@@ -98,7 +98,7 @@ class TalkCLI {
   Future<void> optionSendMessage() async {
     questionToken();
     var textMessage = questionTextMessage();
-    var response = await _talk.sendTextMessage(_token, textMessage);
+    var response = await _talk.sendTextMessage(textMessage);
     print('${response.body}');
   }
 
@@ -112,14 +112,14 @@ class TalkCLI {
   // Executes the menu option to create a
   Future<void> optionWebSocketConnect() async {
     questionToken();
-    await _talk.connect(_token, onMessage);
+    //await _talk.connect(_token, onMessage);
     print('Connected to the channel: ' + _token);
   }
 
   // Executes the menu option to create a
   Future<void> optionWebSocketSend() async {
     var message = questionTextMessage();
-    await _talk.send(message);
+    // await _talk.send(message);
   }
 
   void onMessage(message) {

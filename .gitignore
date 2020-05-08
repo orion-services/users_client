@@ -1,4 +1,5 @@
 .dart_tool/
+.vscode/
 .packages
 .DS_Store
 # Remove the following pattern if you wish to check in your lock file
