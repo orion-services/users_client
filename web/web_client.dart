@@ -14,39 +14,58 @@ import 'dart:html';
 import 'dart:convert';
 import 'package:orion_talk_client/service_client.dart';
 
+/// methos main
 void main() {
   WebClientExample();
 }
 
-///
+/// Examples of how to use TalkWebServiceClient and TalkWebSocket clients in
+/// simple Web page
 class WebClientExample {
   TalkWebServiceClient _talk;
 
   WebClientExample() {
-    // Instantiatinc the Talk Web Service Client
+    // instantiating the talk web service client
     _talk = TalkWebServiceClient();
 
     // adding the listeners to button 'create channel' and 'send message'
-    querySelector('#btnChannel').onClick.listen(btnChannelHandler);
-    querySelector('#btnSend').onClick.listen(btnSendHandler);
+    querySelector('#btnChannel').onClick.listen(btnCreateChannelHandler);
+    querySelector('#btnSend').onClick.listen(btnSendMessageHandler);
   }
 
-  void btnSendHandler(MouseEvent event) {
+  /// Handle the [MouseEvent] of the button send message
+  void btnSendMessageHandler(MouseEvent event) async {
     // Geting the token of a channel from input text and
     // setting the token to Talk Web Service client
     _talk.token = (querySelector('#channel') as InputElement).value;
     // geting the message from input text
     var message = (querySelector('#textField') as InputElement).value;
-    // sending the message to Talk Service
-    _talk.sendTextMessage(message).then((response) =>
-        // setting the return message to HTML screen
-        querySelector('#output')
-            .appendText(json.decode(response.body)['message']));
+
+    String data;
+    try {
+      // sending the message to a channel in talk Service
+      var response = await _talk.sendTextMessage(message);
+      data = json.decode(response.body)['message'];
+    } on Exception {
+      data = 'talk service connection problem';
+    } finally {
+      // setting the return message to HTML screen
+      querySelector('#output').appendText(data);
+    }
   }
 
-  void btnChannelHandler(MouseEvent event) {
-    _talk.createChannel().then((response) =>
-        (querySelector('#channel') as InputElement).value =
-            json.decode(response.body)['token']);
+  /// Handle the [MouseEvent] of the button create channel
+  void btnCreateChannelHandler(MouseEvent event) async {
+    String data;
+    try {
+      // creates a channel in talk service
+      var response = await _talk.createChannel();
+      data = json.decode(response.body)['token'];
+    } on Exception {
+      data = 'talk service connection problem';
+    } finally {
+      // setting the return message to HTML screen
+      querySelector('#output').appendText(data);
+    }
   }
 }
