@@ -11,26 +11,66 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 class BaseClient {
+  /// the host of the service
   String host;
-  String port;
-  String serviceEndpoint;
-  String socketEndpoint;
-  String api;
-  String serviceURL;
-  String socketURL;
 
+  /// the port of the service
+  String port;
+
+  /// the name of the app
+  String app;
+
+  /// the service endpoint name
+  String wsEndpoint;
+
+  /// the socket endpoint name
+  String socketEndpoint;
+
+  /// the api version
+  String api;
+
+  /// the result url for the Web Service
+  String wsURL;
+
+  /// the token of a channel
   String token;
 
-  BaseClient() {
+  /// [bool enableSecurity] indicates if will be used a secure protocol
+  /// and [bool devMode] changes the URL of remove for development mode
+  BaseClient(bool enableSecurity, bool devMode) {
+    app = 'orion-talk-service';
     host = 'localhost';
     port = '9081';
-    serviceEndpoint = 'talk';
-    socketEndpoint = 'talkws';
+    wsEndpoint = 'talk';
     api = 'api/v1.0';
 
-    serviceURL =
-        'http://' + host + ':' + port + '/' + serviceEndpoint + '/' + api + '/';
+    changeServiceURL(enableSecurity, devMode, host);
+  }
 
-    socketURL = 'ws://' + host + ':' + port + '/' + socketEndpoint + '/';
+  void changeServiceURL(bool enableSecurity, bool devMode, String newHost) {
+    host = newHost;
+    _enableSecurityProtocol(enableSecurity);
+    _enableDevMode(devMode);
+  }
+
+  void _enableSecurityProtocol(bool enableSecurity) {
+    if (enableSecurity) {
+      wsURL = 'https://';
+    } else {
+      wsURL = 'http://';
+    }
+  }
+
+  void _enableDevMode(bool devMode) {
+    String urlBase;
+    if (devMode) {
+      urlBase = host + ':' + port;
+      wsURL = wsURL + urlBase + '/' + wsEndpoint + '/' + api + '/';
+      print(wsURL);
+    } else {
+      urlBase = host + ':' + port;
+      wsURL = wsURL + urlBase + '/' + app + '/' + wsEndpoint + '/' + api + '/';
+      print(wsURL);
+    }
   }
 }

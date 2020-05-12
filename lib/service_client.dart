@@ -14,28 +14,32 @@ import 'package:http/http.dart' as http;
 import 'package:orion_talk_client/base_client.dart';
 
 class TalkWebServiceClient extends BaseClient {
-  TalkWebServiceClient([String tokenChannel]) {
+  TalkWebServiceClient(bool secure, bool development, [String tokenChannel])
+      : super(secure, development) {
+    // sets the tocken of a channel
     token = tokenChannel;
   }
 
   /// Web Serive: creates a Channel in the Oriton Talk microservices
   /// and returns [Future<http.Response>]
-  Future<http.Response> createChannel() async {
-    var url = serviceURL + 'create';
-    return await http.get(url);
+  Future<http.Response> createChannel() {
+    var url = wsURL + 'create';
+    return http.get(url);
   }
 
   /// Web Serive: sends a [message] to a channel through a [token] and
   /// returns [Future<http.Response>]
-  Future<http.Response> sendTextMessage(String message) async {
-    var url = serviceURL + 'send';
-    return await http.post(url, body: {'token': token, 'message': message});
+  Future<http.Response> sendTextMessage(String message) {
+    var url = wsURL + 'send';
+    print(url);
+    return http.post(url, body: {'token': token, 'message': message});
   }
 
   /// Web Serive: loads a channel through a [token] to retrieve all messages
   /// and returns [Future<http.Response>]
-  Future<http.Response> loadMessages(String token) async {
-    var url = serviceURL + 'load' + '/' + token;
-    return await http.get(url);
+  Future<http.Response> loadMessages(String token) {
+    var url = wsURL + 'load' + '/' + token;
+    print(url);
+    return http.get(url);
   }
 }

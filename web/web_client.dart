@@ -26,20 +26,42 @@ class WebClientExample {
 
   WebClientExample() {
     // instantiating the talk web service client
-    _talk = TalkWebServiceClient();
+    _talk = TalkWebServiceClient(getSecureValue(), getDevelopmentValue());
 
-    // adding the listeners to button 'create channel' and 'send message'
-    querySelector('#btnChannel').onClick.listen(btnCreateChannelHandler);
-    querySelector('#btnSend').onClick.listen(btnSendMessageHandler);
+    // adding buttons listeners
+    querySelector('#btnChannel').onClick.listen(createChannelHandler);
+    querySelector('#btnSend').onClick.listen(sendMessageHandler);
+
+    // adding checkboxes listeners to change service URL to run with secure
+    // connection and dev mode
+    querySelector('#secure').onClick.listen(urlHandler);
+    querySelector('#development').onClick.listen(urlHandler);
+    querySelector('#btnChangeHost').onClick.listen(urlHandler);
   }
 
-  /// Handle the [MouseEvent] of the button send message
-  void btnSendMessageHandler(MouseEvent event) async {
+  /// Handles the [MouseEvent] of the button create channel
+  void createChannelHandler(MouseEvent event) async {
+    String data;
+    try {
+      // creates a channel in talk service
+      var response = await _talk.createChannel();
+      data = json.decode(response.body)['token'];
+    } on Exception {
+      data = 'talk service connection problem';
+    } finally {
+      // setting the return message to HTML screen
+      (querySelector('#channel') as InputElement).value = data;
+    }
+  }
+
+  /// Handles the [MouseEvent] of the button send message
+  void sendMessageHandler(MouseEvent event) async {
     // Geting the token of a channel from input text and
     // setting the token to Talk Web Service client
     _talk.token = (querySelector('#channel') as InputElement).value;
+
     // geting the message from input text
-    var message = (querySelector('#textField') as InputElement).value;
+    var message = (querySelector('#sendMessage') as InputElement).value;
 
     String data;
     try {
@@ -54,18 +76,26 @@ class WebClientExample {
     }
   }
 
-  /// Handle the [MouseEvent] of the button create channel
-  void btnCreateChannelHandler(MouseEvent event) async {
-    String data;
-    try {
-      // creates a channel in talk service
-      var response = await _talk.createChannel();
-      data = json.decode(response.body)['token'];
-    } on Exception {
-      data = 'talk service connection problem';
-    } finally {
-      // setting the return message to HTML screen
-      querySelector('#output').appendText(data);
-    }
+  /// Handles the [MouseEvent] of the checkboxes
+  void urlHandler(MouseEvent event) {
+    // change the url of the service
+    _talk.changeServiceURL(
+        getSecureValue(), getDevelopmentValue(), getHostValue());
+  }
+
+  /// [return] a boolean indicating a secure conection or not
+  bool getSecureValue() {
+    return (querySelector('#secure') as InputElement).checked;
+  }
+
+  /// [return] a boolean indicating if the service will run in dev mode
+  bool getDevelopmentValue() {
+    return (querySelector('#development') as InputElement).checked;
+  }
+
+  /// [return] a string with the host
+  String getHostValue() {
+    var host = (querySelector('#host') as InputElement).value;
+    return (host == '') ? 'localhost' : host;
   }
 }

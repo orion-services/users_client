@@ -26,7 +26,8 @@ class TalkCLI {
     _host = 'localhost';
     _port = '9081';
     _token = '';
-    _talk = TalkWebServiceClient();
+    // Seting the secure to false and development to true
+    _talk = TalkWebServiceClient(false, true);
   }
 
   // Prints the menu

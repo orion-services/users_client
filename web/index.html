@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="scaffolded-by" content="https://github.com/dart-lang/stagehand">
     <title>Talk Web client example</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.ico">
     <script defer src="web_client.dart.js"></script>
 </head>
@@ -16,9 +15,16 @@
 
     <div id="output"></div>
     <input type="text" id="channel" placeholder="channel"/>
-    <input type="text" id="textField" placeholder="send message"/>
+    <input type="text" id="sendMessage" placeholder="send message"/>
     <button id="btnChannel">Create Channel</button>
     <button id="btnSend">Send Message</button>
+    <br/><br/>
+    Secure: <input type="checkbox" id="secure" value="false">
+    <br/>
+    Development: <input type="checkbox" id="development" value="true" checked>
+    <br/>
+    <input type="text" id="host" placeholder="host"/>
+    <button id="btnChangeHost">change host</button>
 
 </body>
 </html>
