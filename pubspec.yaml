@@ -10,6 +10,7 @@ dependencies:
   prompts: ^1.3.1
   http: ^0.12.1
   web_socket_channel: ^1.1.0
+  
 
 dev_dependencies:
   build_runner: ^1.9.0

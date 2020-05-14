@@ -6,25 +6,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="scaffolded-by" content="https://github.com/dart-lang/stagehand">
-    <title>Talk Web client example</title>
+    <title>Talk client example</title>
     <link rel="icon" href="favicon.ico">
     <script defer src="web_client.dart.js"></script>
 </head>
 
 <body>
 
-    <div id="output"></div>
+    Web Services:
     <input type="text" id="channel" placeholder="channel"/>
     <input type="text" id="sendMessage" placeholder="send message"/>
-    <button id="btnChannel">Create Channel</button>
-    <button id="btnSend">Send Message</button>
-    <br/><br/>
+    <button id="btnCreateChannel">create channel</button>
+    <button id="btnSend">send message</button>
+    
+    <br/><br/><br/>
+
+    Web Socket:
+    <button id="btnSocketConnect">connect</button>
+    <button id="btnSocketSend">send message</button>
+    <button id="btnSocketClose">close</button>
+    
+    <br/><br/><br/>
+
+    Configurations:
     Secure: <input type="checkbox" id="secure" value="false">
-    <br/>
     Development: <input type="checkbox" id="development" value="true" checked>
-    <br/>
     <input type="text" id="host" placeholder="host"/>
-    <button id="btnChangeHost">change host</button>
+    <input type="text" id="port" placeholder="port"/>
+    <button id="btnChangeHost">configure</button>
+    
+    <br/><br/><br/>
+    Output:
+    <div id="output"></div>
 
 </body>
 </html>

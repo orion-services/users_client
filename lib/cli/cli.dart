@@ -12,137 +12,139 @@
 ///  limitations under the License.
 import 'dart:io';
 import 'dart:convert';
-import 'package:orion_talk_client/service_client.dart';
+import 'package:orion_talk_client/web_service.dart';
 import 'package:prompts/prompts.dart' as prompts;
 
 /// CLI client for Orion Talk micro service
 class TalkCLI {
+  // stores the host of talk service
   String _host;
+
+  // stores the port
   String _port;
+
+  // enable development mode
+  bool _devMode;
+
+  // enables security https or wss
+  bool _security;
+
+  // stores the token of a channel
   String _token;
-  TalkWebServiceClient _talk;
+
+  // stores a response of a operation
+  String _response;
+
+  // the Talk Web Service client
+  TalkWebService _talkWebService;
 
   TalkCLI() {
     _host = 'localhost';
     _port = '9081';
     _token = '';
+    _response = '';
+
     // Seting the secure to false and development to true
-    _talk = TalkWebServiceClient(false, true);
+    _security = false;
+    _devMode = true;
+    _talkWebService = TalkWebService(_security, _devMode);
   }
 
   // Prints the menu
   Future<bool> menu() async {
+    // clear console
+    clear();
+
+    // print the response of last operation
+    print(_response);
+
     // controls the loop of the main menu
     var loop = true;
 
     // the main menu options
     var options = [
-      'Configure host and port',
       'Create channel',
       'Send message to a channel',
-      'Load Messages',
-      'Web socket connect',
-      'Web socket send message',
-      'Clear console',
+      'Load messages',
+      'Configurations',
       'Exit'
     ];
 
     // configure the options
     var cli = prompts.choose('Options', options, defaultsTo: options[0]);
+
     // prints the menu
     print(cli);
 
     // executing actions according the options
     if (cli == options[0]) {
-      // Configure
-      optionConfigure();
-    } else if (cli == options[1]) {
       // create channel
       await optionCreateChannel();
-    } else if (cli == options[2]) {
+    } else if (cli == options[1]) {
       // send message
       await optionSendMessage();
-    } else if (cli == options[3]) {
+    } else if (cli == options[2]) {
       // load messages
       await optionLoadMessages();
+    } else if (cli == options[3]) {
+      // Configure
+      optionConfigure();
     } else if (cli == options[4]) {
-      await optionWebSocketConnect();
-    } else if (cli == options[5]) {
-      await optionWebSocketSend();
-    } else if (cli == options[6]) {
-      clear();
-    } else if (cli == options[7]) {
       loop = false;
       clear();
     }
     return Future.value(loop);
   }
 
+  /// Executes the menu option to create a new channel
+  void optionCreateChannel() async {
+    try {
+      var response = await _talkWebService.createChannel();
+      _token = json.decode(response.body)['token'];
+      _response = 'Create channel response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
+  /// Executes the menu option to send a message do the service
+  void optionSendMessage() async {
+    clear();
+    try {
+      questionToken();
+      var textMessage = questionTextMessage();
+      var response = await _talkWebService.sendTextMessage(textMessage);
+      _response = 'Send message response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
+  /// Executes the menu option to send a message do the service
+  void optionLoadMessages() async {
+    clear();
+    try {
+      questionToken();
+      var response = await _talkWebService.loadMessages(_token);
+      _response = 'Load message responde: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
     questionHost();
     questionPort();
+    questionSecurity();
+    questionDevMode();
 
-    // set talk client
-    _talk.host = _host;
-    _talk.port = _port;
+    _talkWebService.changeServiceURL(_security, _devMode, _host, _port);
+
+    _response = 'Web Service URL: ' + _talkWebService.wsURL;
   }
 
-  /// Executes the menu option to create a new channel
-  Future<void> optionCreateChannel() async {
-    var response = await _talk.createChannel();
-    _token = json.decode(response.body)['token'];
-    print('${response.body}');
-  }
-
-  /// Executes the menu option to send a message do the service
-  Future<void> optionSendMessage() async {
-    questionToken();
-    var textMessage = questionTextMessage();
-    var response = await _talk.sendTextMessage(textMessage);
-    print('${response.body}');
-  }
-
-  /// Executes the menu option to send a message do the service
-  Future<void> optionLoadMessages() async {
-    questionToken();
-    var response = await _talk.loadMessages(_token);
-    print('${response.body}');
-  }
-
-  // Executes the menu option to create a
-  Future<void> optionWebSocketConnect() async {
-    questionToken();
-    //await _talk.connect(_token, onMessage);
-    print('Connected to the channel: ' + _token);
-  }
-
-  // Executes the menu option to create a
-  Future<void> optionWebSocketSend() async {
-    var message = questionTextMessage();
-    // await _talk.send(message);
-  }
-
-  void onMessage(message) {
-    print(message);
-  }
-
-  void questionHost() {
-    _host = prompts.get('Host: ', defaultsTo: _host);
-  }
-
-  void questionPort() {
-    _port = prompts.get('Port: ', defaultsTo: _port);
-  }
-
-  void questionToken() {
-    _token = prompts.get('Token of a channel: ', defaultsTo: _token);
-  }
-
-  String questionTextMessage() {
-    return prompts.get('Messsage: ');
-  }
-
+  /// clear the console
   void clear() {
     if (Platform.isWindows) {
       // We need to test it on Windows
@@ -150,5 +152,38 @@ class TalkCLI {
     } else {
       print(Process.runSync('clear', [], runInShell: true).stdout);
     }
+  }
+
+  /// ask about service host
+  void questionHost() {
+    _host = prompts.get('Host: ', defaultsTo: _host);
+  }
+
+  /// ask about service port
+  void questionPort() {
+    _port = prompts.get('Port: ', defaultsTo: _port);
+  }
+
+  /// ask about service security (http or https)
+  void questionSecurity() {
+    _security = prompts.getBool('Enable security: ', defaultsTo: _security);
+  }
+
+  /// enables dev mode
+  void questionDevMode() {
+    _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
+  }
+
+  /// ask about the token of a channel
+  void questionToken() {
+    _token = prompts.get('Token of a channel: ', defaultsTo: _token);
+
+    // stores the token in the Web Service
+    _talkWebService.token = _token;
+  }
+
+  /// ask about the message to send to a channel
+  String questionTextMessage() {
+    return prompts.get('Messsage: ');
   }
 }

@@ -13,9 +13,18 @@
 import 'package:http/http.dart' as http;
 import 'package:orion_talk_client/base_client.dart';
 
-class TalkWebServiceClient extends BaseClient {
-  TalkWebServiceClient(bool secure, bool development, [String tokenChannel])
-      : super(secure, development) {
+/// Web Service for Talk microservice
+class TalkWebService extends BaseClient {
+  /// instatiate a TalkWebService object.
+  /// [bool enableSecurity] indicates is the client will work with http or https
+  ///
+  /// [bool devMode] modify the service URL to operates in dev mode. In development
+  /// mode, Open liberty modifies the service URL eliminating When we are the application
+  /// name orion-talk-service
+  ///
+  /// [String tockenChannel] indicates the token a channel (optional)
+  TalkWebService(bool enableSecurity, bool devMode, [String tokenChannel])
+      : super(enableSecurity, devMode) {
     // sets the tocken of a channel
     token = tokenChannel;
   }
@@ -31,7 +40,6 @@ class TalkWebServiceClient extends BaseClient {
   /// returns [Future<http.Response>]
   Future<http.Response> sendTextMessage(String message) {
     var url = wsURL + 'send';
-    print(url);
     return http.post(url, body: {'token': token, 'message': message});
   }
 
