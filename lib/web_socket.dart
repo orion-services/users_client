@@ -12,10 +12,10 @@
 ///  limitations under the License.
 //import 'dart:html';
 import 'dart:html';
-import 'package:orion_talk_client/base_client.dart';
+import 'package:orion_user_client/base_client.dart';
 
 /// Web Socket client for Talk microservice
-class TalkWebSocket extends BaseClient {
+class UserWebSocket extends BaseClient {
   // the Web Socket Object from dart:html package
   WebSocket _websocket;
 
@@ -27,7 +27,7 @@ class TalkWebSocket extends BaseClient {
   /// name orion-talk-service
   ///
   /// [String tockenChannel] indicates the token a channel (optional)
-  TalkWebSocket(bool enableSecurity, bool devMode, [String tokenChannel])
+  UserWebSocket(bool enableSecurity, bool devMode, [String tokenChannel])
       : super(enableSecurity, devMode) {
     token = tokenChannel;
   }

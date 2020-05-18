@@ -41,11 +41,11 @@ class BaseClient {
   /// [bool enableSecurity] indicates if will be used a secure protocol
   /// and [bool devMode] changes the URL of remove for development mode
   BaseClient(bool enableSecurity, bool devMode) {
-    app = 'orion-talk-service';
+    app = 'orion-user-service';
     host = 'localhost';
     port = '9081';
-    wsEndpoint = 'talk';
-    socketEndpoint = 'talkws';
+    wsEndpoint = 'user';
+    socketEndpoint = 'userws';
     api = 'api/v1.0';
 
     changeServiceURL(enableSecurity, devMode, host, port);

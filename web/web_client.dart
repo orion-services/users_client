@@ -12,8 +12,8 @@
 ///  limitations under the License.
 import 'dart:html';
 import 'dart:convert';
-import 'package:orion_talk_client/web_service.dart';
-import 'package:orion_talk_client/web_socket.dart';
+import 'package:orion_user_client/web_service.dart';
+import 'package:orion_user_client/web_socket.dart';
 
 /// methos main
 void main() {
@@ -24,25 +24,21 @@ void main() {
 /// simple Web page
 class WebClientExample {
   /// Talk Web Service client
-  TalkWebService _talkWS;
+  UserWebService _userWS;
 
   /// Talk Web Socket client
-  TalkWebSocket _talkSocket;
+  UserWebSocket _userSocket;
 
   WebClientExample() {
     // instantiating the talk web service client
-    _talkWS = TalkWebService(getSecureValue(), getDevelopmentValue());
-    _talkSocket = TalkWebSocket(getSecureValue(), getDevelopmentValue());
+    _userWS = UserWebService(getSecureValue(), getDevelopmentValue());
+    _userSocket = UserWebSocket(getSecureValue(), getDevelopmentValue());
 
     // adding buttons listeners
     // Web Service
-    querySelector('#btnCreateChannel').onClick.listen(createChannelHandler);
-    querySelector('#btnSend').onClick.listen(sendMessageHandler);
+    querySelector('#btnCreateUser').onClick.listen(createUserHandler);
 
-    // Web socket
-    querySelector('#btnSocketConnect').onClick.listen(socketConnectHandler);
-    querySelector('#btnSocketSend').onClick.listen(socketSendMessageHandler);
-    querySelector('#btnSocketClose').onClick.listen(socketCloseHandler);
+   
 
     // adding checkboxes listeners to change service URL to run with secure
     // connection and dev mode
@@ -52,35 +48,20 @@ class WebClientExample {
   }
 
   /// Handles the [MouseEvent event] of the button create channel
-  void createChannelHandler(MouseEvent event) async {
-    String data;
-    try {
-      // creates a channel in talk service
-      var response = await _talkWS.createChannel();
-      data = json.decode(response.body)['token'];
-    } on Exception {
-      data = 'connection refused';
-    } finally {
-      // setting the return message to HTML screen
-      appendNode(data);
-      (querySelector('#channel') as InputElement).value = data;
-    }
-  }
-
-  /// Handles the [MouseEvent event] of the button send message
-  void sendMessageHandler(MouseEvent event) async {
-    // Geting the token of a channel from input text and
-    // setting the token to Talk Web Service client
-    _talkWS.token = (querySelector('#channel') as InputElement).value;
+  void createUserHandler(MouseEvent event) async {
+   
 
     // geting the message from input text
-    var message = (querySelector('#sendMessage') as InputElement).value;
-
+    var name = (querySelector('#name') as InputElement).value;
+    var email = (querySelector('#email') as InputElement).value;
+    
     String data;
     try {
       // sending the message to a channel in talk Service
-      var response = await _talkWS.sendTextMessage(message);
-      data = json.decode(response.body)['message'];
+      var response = await _userWS.createUser(name, email);
+      data = json.decode(response.body)['name'];
+      data = json.decode(response.body)['email'];
+
     } on Exception {
       data = 'connection refused';
     } finally {
@@ -89,44 +70,21 @@ class WebClientExample {
     }
   }
 
-  /// Handles the [MouseEvent event] of the button to connect with a
-  /// Web Socket channel
-  void socketConnectHandler(MouseEvent event) {
-    // Geting the token of a channel from input text and
-    // setting the token to Talk Web Socket client
-    _talkSocket.token = (querySelector('#channel') as InputElement).value;
-    _talkSocket.connect(_talkSocket.token);
-    _talkSocket.registerListener(socketListener);
-  }
+  
 
-  /// Handles the [MouseEvent event] of the button to send a message to a
-  /// Web Socket channel
-  void socketSendMessageHandler(MouseEvent event) {
-    var message = (querySelector('#sendMessage') as InputElement).value;
-    _talkSocket.send(message);
-  }
 
-  /// Handles the [MouseEvent event] of the button to close a connect with a channel
-  /// through a web socket
-  void socketCloseHandler(MouseEvent event) {
-    _talkSocket.close();
-  }
-
-  /// listens the [MessageEvent event] through Web Socket channel
-  void socketListener(MessageEvent event) {
-    appendNode(event.data);
-  }
+  
 
   /// Handles the [MouseEvent] of the checkboxes
   void urlHandler(MouseEvent event) {
     // change the url of the service
-    _talkWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _userWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
-    _talkSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _userSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
 
-    appendNode(_talkWS.wsURL);
-    appendNode(_talkSocket.socketURL);
+    appendNode(_userWS.wsURL);
+    appendNode(_userSocket.socketURL);
   }
 
   /// [return] a boolean indicating a secure conection or not

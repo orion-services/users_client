@@ -1,7 +1,7 @@
-name: orion_talk_client
-description: Orion Talk Client
+name: orion_user_client
+description: Orion User Client
 version: 1.0.0
-homepage: https://github.com/orion-services/talk_client
+homepage: https://github.com/orion-services/user_client
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

@@ -11,10 +11,10 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-import 'package:orion_talk_client/cli/cli.dart';
+import 'package:orion_user_client/cli/cli.dart';
 
 void main(List<String> arguments) async {
-  var cli = TalkCLI();
+  var cli = UserCLI();
   var loop = true;
   while (loop) {
     loop = await cli.menu();

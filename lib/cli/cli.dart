@@ -12,12 +12,12 @@
 ///  limitations under the License.
 import 'dart:io';
 import 'dart:convert';
-import 'package:orion_talk_client/web_service.dart';
+import 'package:orion_user_client/web_service.dart';
 import 'package:prompts/prompts.dart' as prompts;
 
-/// CLI client for Orion Talk micro service
-class TalkCLI {
-  // stores the host of talk service
+/// CLI client for Orion User micro service
+class UserCLI {
+  // stores the host of user service
   String _host;
 
   // stores the port
@@ -35,19 +35,25 @@ class TalkCLI {
   // stores a response of a operation
   String _response;
 
-  // the Talk Web Service client
-  TalkWebService _talkWebService;
+  // the User Web Service client
+  UserWebService _userWebService;
 
-  TalkCLI() {
+  String _name;
+
+  String _email;
+
+  UserCLI() {
     _host = 'localhost';
     _port = '9081';
     _token = '';
+    _name = '';
+    _email = '';
     _response = '';
 
     // Seting the secure to false and development to true
     _security = false;
     _devMode = true;
-    _talkWebService = TalkWebService(_security, _devMode);
+    _userWebService = UserWebService(_security, _devMode);
   }
 
   // Prints the menu
@@ -63,9 +69,7 @@ class TalkCLI {
 
     // the main menu options
     var options = [
-      'Create channel',
-      'Send message to a channel',
-      'Load messages',
+      'Create user',
       'Configurations',
       'Exit'
     ];
@@ -79,58 +83,40 @@ class TalkCLI {
     // executing actions according the options
     if (cli == options[0]) {
       // create channel
-      await optionCreateChannel();
+      await optionCreateUser();
     } else if (cli == options[1]) {
-      // send message
-      await optionSendMessage();
-    } else if (cli == options[2]) {
-      // load messages
-      await optionLoadMessages();
-    } else if (cli == options[3]) {
       // Configure
       optionConfigure();
-    } else if (cli == options[4]) {
+    } else if (cli == options[2]) {
       loop = false;
       clear();
     }
     return Future.value(loop);
   }
 
-  /// Executes the menu option to create a new channel
-  void optionCreateChannel() async {
+void optionCreateUser() async{
+    clear();
     try {
-      var response = await _talkWebService.createChannel();
-      _token = json.decode(response.body)['token'];
-      _response = 'Create channel response: ${response.body}';
+      // questionName();
+      // questionEmail();
+     _name = prompts.get('name of a user: ', defaultsTo: _name);
+     _email = prompts.get('name of a email: ', defaultsTo: _email);
+      var response = await _userWebService.createUser(_name,_email);
+      _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
     }
   }
 
-  /// Executes the menu option to send a message do the service
-  void optionSendMessage() async {
-    clear();
-    try {
-      questionToken();
-      var textMessage = questionTextMessage();
-      var response = await _talkWebService.sendTextMessage(textMessage);
-      _response = 'Send message response: ${response.body}';
-    } on Exception {
-      _response = 'Connection refused';
-    }
-  }
+ void questionName() {
+    _name = prompts.get('name of a user: ', defaultsTo: _name);
 
-  /// Executes the menu option to send a message do the service
-  void optionLoadMessages() async {
-    clear();
-    try {
-      questionToken();
-      var response = await _talkWebService.loadMessages(_token);
-      _response = 'Load message responde: ${response.body}';
-    } on Exception {
-      _response = 'Connection refused';
-    }
   }
+  void questionEmail() {
+    _email = prompts.get('name of a email: ', defaultsTo: _email);
+
+  }
+  
 
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
@@ -139,9 +125,9 @@ class TalkCLI {
     questionSecurity();
     questionDevMode();
 
-    _talkWebService.changeServiceURL(_security, _devMode, _host, _port);
+    _userWebService.changeServiceURL(_security, _devMode, _host, _port);
 
-    _response = 'Web Service URL: ' + _talkWebService.wsURL;
+    _response = 'Web Service URL: ' + _userWebService.wsURL;
   }
 
   /// clear the console
@@ -174,16 +160,5 @@ class TalkCLI {
     _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
   }
 
-  /// ask about the token of a channel
-  void questionToken() {
-    _token = prompts.get('Token of a channel: ', defaultsTo: _token);
 
-    // stores the token in the Web Service
-    _talkWebService.token = _token;
-  }
-
-  /// ask about the message to send to a channel
-  String questionTextMessage() {
-    return prompts.get('Messsage: ');
-  }
 }

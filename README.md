@@ -1,6 +1,6 @@
-# Orion Talk Client
+# Orion User Client
 
-Orion Talk Client is a library to provide access to Orion Talk Service.
+Orion User Client is a library to provide access to Orion User Service.
 
 ## Running in command line
 
