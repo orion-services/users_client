@@ -12,8 +12,8 @@
 ///  limitations under the License.
 import 'dart:html';
 import 'dart:convert';
-import 'package:orion_user_client/web_service.dart';
-import 'package:orion_user_client/web_socket.dart';
+import 'package:orion_users_client/web_service.dart';
+import 'package:orion_users_client/web_socket.dart';
 
 /// methos main
 void main() {

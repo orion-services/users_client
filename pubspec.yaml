@@ -1,7 +1,7 @@
-name: orion_user_client
-description: Orion User Client
+name: orion_users_client
+description: Orion Users Client
 version: 1.0.0
-homepage: https://github.com/orion-services/user_client
+homepage: https://github.com/orion-services/users_client
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

@@ -12,7 +12,7 @@
 ///  limitations under the License.
 //import 'dart:html';
 import 'dart:html';
-import 'package:orion_user_client/base_client.dart';
+import 'package:orion_users_client/base_client.dart';
 
 /// Web Socket client for Talk microservice
 class UserWebSocket extends BaseClient {

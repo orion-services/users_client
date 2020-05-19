@@ -11,7 +11,7 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 import 'package:http/http.dart' as http;
-import 'package:orion_user_client/base_client.dart';
+import 'package:orion_users_client/base_client.dart';
 
 /// Web Service for User microservice
 class UserWebService extends BaseClient {
@@ -33,21 +33,21 @@ class UserWebService extends BaseClient {
     /// Web Serive: creates a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email) {
-    var url = wsURL + 'createuser';
+    var url = wsURL + 'createusers';
     return http.post(url, body: {'name': name, 'email': email});
   }
 
    /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
     Future<http.Response> updateUser(String id, String name, String email) {
-    var url = wsURL + 'updateuser';
+    var url = wsURL + 'updateusers';
     return http.post(url, body: {'id': id, 'name': name, 'email': email});
   }
 
      /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
     Future<http.Response> deleteUser(String id) {
-    var url = wsURL + 'updateuser';
+    var url = wsURL + 'updateusers';
     return http.post(url, body: {'id': id});
   }
 

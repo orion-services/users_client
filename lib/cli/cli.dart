@@ -12,7 +12,7 @@
 ///  limitations under the License.
 import 'dart:io';
 import 'dart:convert';
-import 'package:orion_user_client/web_service.dart';
+import 'package:orion_users_client/web_service.dart';
 import 'package:prompts/prompts.dart' as prompts;
 
 /// CLI client for Orion User micro service

@@ -41,7 +41,7 @@ class BaseClient {
   /// [bool enableSecurity] indicates if will be used a secure protocol
   /// and [bool devMode] changes the URL of remove for development mode
   BaseClient(bool enableSecurity, bool devMode) {
-    app = 'orion-user-service';
+    app = 'orion-users-service';
     host = 'localhost';
     port = '9081';
     wsEndpoint = 'user';
