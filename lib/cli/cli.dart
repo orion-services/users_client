@@ -42,6 +42,8 @@ class UserCLI {
 
   String _email;
 
+  String _id;
+
   UserCLI() {
     _host = 'localhost';
     _port = '9081';
@@ -49,6 +51,7 @@ class UserCLI {
     _name = '';
     _email = '';
     _response = '';
+    _id = '';
 
     // Seting the secure to false and development to true
     _security = false;
@@ -70,6 +73,9 @@ class UserCLI {
     // the main menu options
     var options = [
       'Create user',
+      'Update user',
+      'Delete user',
+      'List users',
       'Configurations',
       'Exit'
     ];
@@ -82,12 +88,21 @@ class UserCLI {
 
     // executing actions according the options
     if (cli == options[0]) {
-      // create channel
+      // create user
       await optionCreateUser();
     } else if (cli == options[1]) {
+      // update user
+      await optionUpdateUser();
+   }  else if (cli == options[2]) {
+      // delete user
+      await optionDeleteUser();
+   }  else if (cli == options[3]) {
+      // list users
+      await optionListUsers();
+    } else if (cli == options[4]) {
       // Configure
       optionConfigure();
-    } else if (cli == options[2]) {
+    } else if (cli == options[5]) {
       loop = false;
       clear();
     }
@@ -108,22 +123,52 @@ void optionCreateUser() async{
     }
   }
 
- void questionName() {
-    _name = prompts.get('name of a user: ', defaultsTo: _name);
-
+  void optionUpdateUser() async{
+    clear();
+    try {
+     _id = prompts.get('your id: ', defaultsTo: _id);
+     _name = prompts.get('name of a user: ', defaultsTo: _name);
+     _email = prompts.get('name of a email: ', defaultsTo: _email);
+      var response = await _userWebService.updateUser(_id, _name,_email);
+      
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
   }
-  void questionEmail() {
-    _email = prompts.get('name of a email: ', defaultsTo: _email);
 
+   void optionDeleteUser() async{
+    clear();
+    try {
+     _id = prompts.get('your id: ', defaultsTo: _id);
+      var response = await _userWebService.deleteUser(_id);
+      
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
   }
-  
+
+     void optionListUsers() async{
+    clear();
+    try {
+     _id = prompts.get('your id: ', defaultsTo: _id);
+      var response = await _userWebService.listUsers(_id);
+      
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
+
 
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
-    questionHost();
-    questionPort();
-    questionSecurity();
-    questionDevMode();
+      questionHost();
+      questionPort();
+      questionSecurity();
+      questionDevMode();
 
     _userWebService.changeServiceURL(_security, _devMode, _host, _port);
 
@@ -160,5 +205,14 @@ void optionCreateUser() async{
     _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
   }
 
+  //  void questionName() {
+  //     _name = prompts.get('name of a user: ', defaultsTo: _name);
+
+  //   }
+  //   void questionEmail() {
+  //     _email = prompts.get('name of a email: ', defaultsTo: _email);
+
+  //   }
+    
 
 }

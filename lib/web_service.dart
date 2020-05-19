@@ -30,14 +30,34 @@ class UserWebService extends BaseClient {
   }
 
 
-    /// Web Serive: creates a Channel in the Oriton User microservices
+    /// Web Serive: creates a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email) {
     var url = wsURL + 'createuser';
     return http.post(url, body: {'name': name, 'email': email});
   }
 
- 
+   /// Web Serive: uodate a user in the Oriton User microservices
+  /// and returns [Future<http.Response>]
+    Future<http.Response> updateUser(String id, String name, String email) {
+    var url = wsURL + 'updateuser';
+    return http.post(url, body: {'id': id, 'name': name, 'email': email});
+  }
 
- 
+     /// Web Serive: uodate a user in the Oriton User microservices
+  /// and returns [Future<http.Response>]
+    Future<http.Response> deleteUser(String id) {
+    var url = wsURL + 'updateuser';
+    return http.post(url, body: {'id': id});
+  }
+
+       /// Web Serive: uodate a user in the Oriton User microservices
+  /// and returns [Future<http.Response>]
+    Future<http.Response> listUsers(String id) {
+    var url = wsURL + 'listusers' + '/' + id;
+    print(url);
+    return http.get(url);
+  }
+
+
 }
