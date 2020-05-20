@@ -53,7 +53,7 @@ class UserWebService extends BaseClient {
 
        /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> listUsers(String id) {
+    Future<http.Response> listUser(String id) {
     var url = wsURL + 'listusers' + '/' + id;
     print(url);
     return http.get(url);

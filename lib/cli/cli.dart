@@ -75,7 +75,7 @@ class UserCLI {
       'Create user',
       'Update user',
       'Delete user',
-      'List users',
+      'List user',
       'Configurations',
       'Exit'
     ];
@@ -98,7 +98,7 @@ class UserCLI {
       await optionDeleteUser();
    }  else if (cli == options[3]) {
       // list users
-      await optionListUsers();
+      await optionListUser();
     } else if (cli == options[4]) {
       // Configure
       optionConfigure();
@@ -149,11 +149,11 @@ void optionCreateUser() async{
     }
   }
 
-     void optionListUsers() async{
+     void optionListUser() async{
     clear();
     try {
      _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _userWebService.listUsers(_id);
+      var response = await _userWebService.listUser(_id);
       
       _response = 'response: ${response.body}';
     } on Exception {

@@ -20,23 +20,26 @@ void main() {
   WebClientExample();
 }
 
-/// Examples of how to use TalkWebService and TalkWebSocket clients in
+/// Examples of how to use UsersWebService and UsersWebSocket clients in
 /// simple Web page
 class WebClientExample {
-  /// Talk Web Service client
+  /// Users Web Service client
   UserWebService _userWS;
 
-  /// Talk Web Socket client
+  /// Users Web Socket client
   UserWebSocket _userSocket;
 
   WebClientExample() {
-    // instantiating the talk web service client
+    // instantiating the users web service client
     _userWS = UserWebService(getSecureValue(), getDevelopmentValue());
     _userSocket = UserWebSocket(getSecureValue(), getDevelopmentValue());
 
     // adding buttons listeners
     // Web Service
     querySelector('#btnCreateUser').onClick.listen(createUserHandler);
+    querySelector('#btnUpdateUser').onClick.listen(updateUserHandler);
+    querySelector('#btnDeleteUser').onClick.listen(deleteUserHandler);
+    querySelector('#btnListUser').onClick.listen(listUserHandler);
 
    
 
@@ -47,33 +50,85 @@ class WebClientExample {
     querySelector('#btnChangeHost').onClick.listen(urlHandler);
   }
 
-  /// Handles the [MouseEvent event] of the button create channel
+  /// Handles the [MouseEvent event] of the button create user
   void createUserHandler(MouseEvent event) async {
-   
-
-    // geting the message from input text
+    // geting the user data
     var name = (querySelector('#name') as InputElement).value;
     var email = (querySelector('#email') as InputElement).value;
     
-    String data;
-    try {
-      // sending the message to a channel in talk Service
-      var response = await _userWS.createUser(name, email);
-      data = json.decode(response.body)['name'];
-      data = json.decode(response.body)['email'];
+      String data;
+        try {
+          // create a user in users service
+          var response = await _userWS.createUser(name, email);
+          data = json.decode(response.body)['name'];
+          data = json.decode(response.body)['email'];
 
-    } on Exception {
-      data = 'connection refused';
-    } finally {
-      // setting the return message to HTML screen
-      appendNode(data);
-    }
+        } on Exception {
+          data = 'connection refused';
+        } finally {
+          // setting the return data to HTML screen
+          appendNode(data);
+        }
   }
 
-  
+  void updateUserHandler(MouseEvent event) async {
+    // geting the user data
+    var id = (querySelector('#id') as InputElement).value;
+    var name = (querySelector('#name') as InputElement).value;
+    var email = (querySelector('#email') as InputElement).value;
+    
+      String data;
+        try {
+          // create a user in users service
+          var response = await _userWS.updateUser(id, name, email);
+          data = json.decode(response.body)['id'];
+          data = json.decode(response.body)['name'];
+          data = json.decode(response.body)['email'];
 
+        } on Exception {
+          data = 'connection refused';
+        } finally {
+          // setting the return data to HTML screen
+          appendNode(data);
+        }
+  }
 
-  
+    void deleteUserHandler(MouseEvent event) async {
+    // geting the user data
+    var id = (querySelector('#id') as InputElement).value;
+    
+      String data;
+        try {
+          // create a user in users service
+          var response = await _userWS.deleteUser(id);
+          data = json.decode(response.body)['id'];
+
+        } on Exception {
+          data = 'connection refused';
+        } finally {
+          // setting the return data to HTML screen
+          appendNode(data);
+        }
+  }
+
+    void listUserHandler(MouseEvent event) async {
+    // geting the user data
+    var id = (querySelector('#id') as InputElement).value;
+    
+      String data;
+        try {
+          // create a user in users service
+          var response = await _userWS.listUser(id);
+          data = json.decode(response.body)['id'];
+
+        } on Exception {
+          data = 'connection refused';
+        } finally {
+          // setting the return data to HTML screen
+          appendNode(data);
+        }
+  }
+
 
   /// Handles the [MouseEvent] of the checkboxes
   void urlHandler(MouseEvent event) {
