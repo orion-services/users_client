@@ -29,6 +29,7 @@ class WebClientExample {
   /// Users Web Socket client
   UserWebSocket _userSocket;
 
+
   WebClientExample() {
     // instantiating the users web service client
     _userWS = UserWebService(getSecureValue(), getDevelopmentValue());
@@ -53,15 +54,14 @@ class WebClientExample {
   /// Handles the [MouseEvent event] of the button create user
   void createUserHandler(MouseEvent event) async {
     // geting the user data
-    var name = (querySelector('#name') as InputElement).value;
-    var email = (querySelector('#email') as InputElement).value;
+    var name = (querySelector('#nameCreate') as InputElement).value;
+    var email = (querySelector('#emailCreate') as InputElement).value;
     
       String data;
         try {
           // create a user in users service
           var response = await _userWS.createUser(name, email);
-          data = json.decode(response.body)['name'];
-          data = json.decode(response.body)['email'];
+          data = json.decode(response.body)['name'+'email'];
 
         } on Exception {
           data = 'connection refused';
@@ -73,17 +73,15 @@ class WebClientExample {
 
   void updateUserHandler(MouseEvent event) async {
     // geting the user data
-    var id = (querySelector('#id') as InputElement).value;
-    var name = (querySelector('#name') as InputElement).value;
-    var email = (querySelector('#email') as InputElement).value;
+    var id = (querySelector('#idUpdate') as InputElement).value;
+    var name = (querySelector('#nameUpdate') as InputElement).value;
+    var email = (querySelector('#emailUpdate') as InputElement).value;
     
       String data;
         try {
           // create a user in users service
           var response = await _userWS.updateUser(id, name, email);
-          data = json.decode(response.body)['id'];
-          data = json.decode(response.body)['name'];
-          data = json.decode(response.body)['email'];
+          data = json.decode(response.body)['id'+'name'+'email'];
 
         } on Exception {
           data = 'connection refused';
@@ -95,7 +93,7 @@ class WebClientExample {
 
     void deleteUserHandler(MouseEvent event) async {
     // geting the user data
-    var id = (querySelector('#id') as InputElement).value;
+    var id = (querySelector('#idDelete') as InputElement).value;
     
       String data;
         try {
@@ -113,7 +111,7 @@ class WebClientExample {
 
     void listUserHandler(MouseEvent event) async {
     // geting the user data
-    var id = (querySelector('#id') as InputElement).value;
+    var id = (querySelector('#idList') as InputElement).value;
     
       String data;
         try {
