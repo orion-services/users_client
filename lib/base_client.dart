@@ -69,7 +69,7 @@ class BaseClient {
     }
   }
 
-  /// cuts the app name from the url to enable dev mode
+  /// cuts the app name from the url to enable developer mode
   void _enableDevMode(bool devMode) {
     String urlBase;
     if (devMode) {
