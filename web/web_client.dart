@@ -12,6 +12,7 @@
 ///  limitations under the License.
 import 'dart:html';
 import 'dart:convert';
+import 'package:http/http.dart';
 import 'package:orion_users_client/web_service.dart';
 import 'package:orion_users_client/web_socket.dart';
 
@@ -126,6 +127,11 @@ class WebClientExample {
           appendNode(data);
         }
   }
+
+  //  String getPortValue() {
+  //   var port = (querySelector('#port') as InputElement).value;
+  //   return (port == '') ? '9081' : port;
+  // }
 
 
   /// Handles the [MouseEvent] of the checkboxes
