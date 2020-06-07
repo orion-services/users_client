@@ -16,7 +16,7 @@ import 'package:orion_users_client/web_service.dart';
 import 'package:prompts/prompts.dart' as prompts;
 
 /// CLI client for Orion User micro service
-class UserCLI {
+class UsersCLI {
   // stores the host of user service
   String _host;
 
@@ -36,17 +36,19 @@ class UserCLI {
   String _response;
 
   // the User Web Service client
-  UserWebService _userWebService;
+  UsersWebService _usersWebService;
 
   String _name;
 
   String _email;
 
+  String _password;
+
   String _id;
 
-  UserCLI() {
+  UsersCLI() {
     _host = 'localhost';
-    _port = '9081';
+    _port = '9080';
     _token = '';
     _name = '';
     _email = '';
@@ -56,7 +58,7 @@ class UserCLI {
     // Seting the secure to false and development to true
     _security = false;
     _devMode = true;
-    _userWebService = UserWebService(_security, _devMode);
+    _usersWebService = UsersWebService(_security, _devMode);
   }
 
   // Prints the menu
@@ -116,7 +118,8 @@ void optionCreateUser() async{
       // questionEmail();
      _name = prompts.get('name of a user: ', defaultsTo: _name);
      _email = prompts.get('name of a email: ', defaultsTo: _email);
-      var response = await _userWebService.createUser(_name,_email);
+     _password = prompts.get('name of a password: ', defaultsTo: _password);
+      var response = await _usersWebService.createUser(_name,_email,_password);
       _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
@@ -129,7 +132,8 @@ void optionCreateUser() async{
      _id = prompts.get('your id: ', defaultsTo: _id);
      _name = prompts.get('name of a user: ', defaultsTo: _name);
      _email = prompts.get('name of a email: ', defaultsTo: _email);
-      var response = await _userWebService.updateUser(_id, _name,_email);
+     _password = prompts.get('name of a password: ', defaultsTo: _password);
+      var response = await _usersWebService.updateUser(_id, _name,_email,_password);
       
       _response = 'response: ${response.body}';
     } on Exception {
@@ -141,7 +145,7 @@ void optionCreateUser() async{
     clear();
     try {
      _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _userWebService.deleteUser(_id);
+      var response = await _usersWebService.deleteUser(_id);
       
       _response = 'response: ${response.body}';
     } on Exception {
@@ -153,7 +157,7 @@ void optionCreateUser() async{
     clear();
     try {
      _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _userWebService.listUser(_id);
+      var response = await _usersWebService.listUser(_id);
       
       _response = 'response: ${response.body}';
     } on Exception {
@@ -170,9 +174,9 @@ void optionCreateUser() async{
       questionSecurity();
       questionDevMode();
 
-    _userWebService.changeServiceURL(_security, _devMode, _host, _port);
+    _usersWebService.changeServiceURL(_security, _devMode, _host, _port);
 
-    _response = 'Web Service URL: ' + _userWebService.wsURL;
+    _response = 'Web Service URL: ' + _usersWebService.wsURL;
   }
 
   /// clear the console

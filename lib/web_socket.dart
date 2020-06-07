@@ -15,7 +15,7 @@ import 'dart:html';
 import 'package:orion_users_client/base_client.dart';
 
 /// Web Socket client for Users microservice
-class UserWebSocket extends BaseClient {
+class UsersWebSocket extends BaseClient {
   // the Web Socket Object from dart:html package
   WebSocket _websocket;
 
@@ -27,7 +27,7 @@ class UserWebSocket extends BaseClient {
   /// name orion-users-service
   ///
   /// [String tockenChannel] indicates the token a program (optional)
-  UserWebSocket(bool enableSecurity, bool devMode, [String tokenChannel])
+  UsersWebSocket(bool enableSecurity, bool devMode, [String tokenChannel])
       : super(enableSecurity, devMode) {
     token = tokenChannel;
   }

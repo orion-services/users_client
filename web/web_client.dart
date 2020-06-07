@@ -25,16 +25,16 @@ void main() {
 /// simple Web page
 class WebClientExample {
   /// Users Web Service client
-  UserWebService _userWS;
+  UsersWebService _usersWS;
 
   /// Users Web Socket client
-  UserWebSocket _userSocket;
+  UsersWebSocket _usersSocket;
 
 
   WebClientExample() {
     // instantiating the users web service client
-    _userWS = UserWebService(getSecureValue(), getDevelopmentValue());
-    _userSocket = UserWebSocket(getSecureValue(), getDevelopmentValue());
+    _usersWS = UsersWebService(getSecureValue(), getDevelopmentValue());
+    _usersSocket = UsersWebSocket(getSecureValue(), getDevelopmentValue());
 
     // adding buttons listeners
     // Web Service
@@ -57,12 +57,13 @@ class WebClientExample {
     // geting the user data
     var name = (querySelector('#nameCreate') as InputElement).value;
     var email = (querySelector('#emailCreate') as InputElement).value;
+    var password = (querySelector('#passwordCreate') as InputElement).value;
     
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.createUser(name, email);
-          data = json.decode(response.body)['name'+'email'];
+          var response = await _usersWS.createUser(name, email, password);
+          data = json.decode(response.body)['name'+'email'+'password'];
 
         } on Exception {
           data = 'connection refused';
@@ -77,12 +78,13 @@ class WebClientExample {
     var id = (querySelector('#idUpdate') as InputElement).value;
     var name = (querySelector('#nameUpdate') as InputElement).value;
     var email = (querySelector('#emailUpdate') as InputElement).value;
+    var password = (querySelector('#passwordUpdate') as InputElement).value;
     
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.updateUser(id, name, email);
-          data = json.decode(response.body)['id'+'name'+'email'];
+          var response = await _usersWS.updateUser(id, name, email, password);
+          data = json.decode(response.body)['id'+'name'+'email'+'password'];
 
         } on Exception {
           data = 'connection refused';
@@ -99,7 +101,7 @@ class WebClientExample {
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.deleteUser(id);
+          var response = await _usersWS.deleteUser(id);
           data = json.decode(response.body)['id'];
 
         } on Exception {
@@ -117,7 +119,7 @@ class WebClientExample {
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.listUser(id);
+          var response = await _usersWS.listUser(id);
           data = json.decode(response.body)['id'];
 
         } on Exception {
@@ -137,13 +139,13 @@ class WebClientExample {
   /// Handles the [MouseEvent] of the checkboxes
   void urlHandler(MouseEvent event) {
     // change the url of the service
-    _userWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _usersWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
-    _userSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _usersSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
 
-    appendNode(_userWS.wsURL);
-    appendNode(_userSocket.socketURL);
+    appendNode(_usersWS.wsURL);
+    appendNode(_usersSocket.socketURL);
   }
 
   /// [return] a boolean indicating a secure conection or not

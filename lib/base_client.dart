@@ -43,10 +43,10 @@ class BaseClient {
   BaseClient(bool enableSecurity, bool devMode) {
     app = 'orion-users-service';
     host = 'localhost';
-    port = '9081';
-    wsEndpoint = 'user';
-    socketEndpoint = 'userws';
-    api = 'api/v1.0';
+    port = '9080';
+    wsEndpoint = 'users';
+    socketEndpoint = 'usersws';
+    api = 'api/v1';
 
     changeServiceURL(enableSecurity, devMode, host, port);
   }

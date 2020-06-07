@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:orion_users_client/base_client.dart';
 
 /// Web Service for User microservice
-class UserWebService extends BaseClient {
+class UsersWebService extends BaseClient {
   /// instatiate a UserWebService object.
   /// [bool enableSecurity] indicates is the client will work with http or https
   ///
@@ -23,7 +23,7 @@ class UserWebService extends BaseClient {
   /// name orion-user-service
   ///
   /// [String tockenChannel] indicates the token a channel (optional)
-  UserWebService(bool enableSecurity, bool devMode, [String tokenChannel])
+  UsersWebService(bool enableSecurity, bool devMode, [String tokenChannel])
       : super(enableSecurity, devMode) {
     // sets the tocken of a channel
     token = tokenChannel;
@@ -32,29 +32,29 @@ class UserWebService extends BaseClient {
 
     /// Web Serive: creates a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-  Future<http.Response> createUser(String name, String email) {
-    var url = wsURL + 'createusers';
-    return http.post(url, body: {'name': name, 'email': email});
+  Future<http.Response> createUser(String name, String email, String password) {
+    var url = wsURL + 'create';
+    return http.post(url, body: {'name': name, 'email': email, 'password': password});
   }
 
    /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> updateUser(String id, String name, String email) {
-    var url = wsURL + 'updateusers';
-    return http.post(url, body: {'id': id, 'name': name, 'email': email});
+    Future<http.Response> updateUser(String id, String name, String email, String password) {
+    var url = wsURL + 'update';
+    return http.post(url, body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
      /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
     Future<http.Response> deleteUser(String id) {
-    var url = wsURL + 'updateusers';
+    var url = wsURL + 'delete';
     return http.post(url, body: {'id': id});
   }
 
        /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
     Future<http.Response> listUser(String id) {
-    var url = wsURL + 'listusers' + '/' + id;
+    var url = wsURL + 'list' + '/' + id;
     print(url);
     return http.get(url);
   }
