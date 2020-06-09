@@ -30,6 +30,9 @@ class WebClientExample {
   /// Users Web Socket client
   UsersWebSocket _usersSocket;
 
+   /// JSON Web Token;
+  String _jwt;
+
 
   WebClientExample() {
     // instantiating the users web service client
@@ -50,6 +53,20 @@ class WebClientExample {
     querySelector('#secure').onClick.listen(urlHandler);
     querySelector('#development').onClick.listen(urlHandler);
     querySelector('#btnChangeHost').onClick.listen(urlHandler);
+  }
+
+    /// Handles the [MouseEvent event] of the login button
+  void loginHandler(MouseEvent event) async {
+    try {
+      var user = (querySelector('#user') as InputElement).value;
+      var password = (querySelector('#password') as InputElement).value;
+      var response = await _usersWS.login(user, password);
+      _jwt = response.body;
+    } on Exception catch (e, stacktrace) {
+      _jwt = stacktrace.toString();
+    } finally {
+      appendNode(_jwt);
+    }
   }
 
   /// Handles the [MouseEvent event] of the button create user
@@ -83,7 +100,7 @@ class WebClientExample {
       String data;
         try {
           // create a user in users service
-          var response = await _usersWS.updateUser(id, name, email, password);
+          var response = await _usersWS.updateUser(id, name, email, password, _jwt);
           data = json.decode(response.body)['id'+'name'+'email'+'password'];
 
         } on Exception {
@@ -101,7 +118,7 @@ class WebClientExample {
       String data;
         try {
           // create a user in users service
-          var response = await _usersWS.deleteUser(id);
+          var response = await _usersWS.deleteUser(id,_jwt);
           data = json.decode(response.body)['id'];
 
         } on Exception {
@@ -119,7 +136,7 @@ class WebClientExample {
       String data;
         try {
           // create a user in users service
-          var response = await _usersWS.listUser(id);
+          var response = await _usersWS.listUser(id,_jwt);
           data = json.decode(response.body)['id'];
 
         } on Exception {

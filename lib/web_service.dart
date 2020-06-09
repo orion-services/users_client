@@ -1,3 +1,5 @@
+import 'dart:io';
+
 /// Copyright 2020 Orion Services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -29,6 +31,13 @@ class UsersWebService extends BaseClient {
     token = tokenChannel;
   }
 
+    /// Web Serive: login the Orion Users microservices
+  /// and returns [Future<http.Response>]
+  Future<http.Response> login(String email, String password) {
+    var url = wsURL + 'login';
+    return http.post(url, body: {'email': email, 'password': password});
+  }
+
 
     /// Web Serive: creates a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
@@ -39,24 +48,29 @@ class UsersWebService extends BaseClient {
 
    /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> updateUser(String id, String name, String email, String password) {
+    Future<http.Response> updateUser(String id, String name, String email, String password, String jwt) {
     var url = wsURL + 'update';
-    return http.post(url, body: {'id': id, 'name': name, 'email': email, 'password': password});
+    return http.post(url, 
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
+        body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
      /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> deleteUser(String id) {
+    Future<http.Response> deleteUser(String id,String jwt) {
     var url = wsURL + 'delete';
-    return http.post(url, body: {'id': id});
+    return http.post(url, 
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
+        body: {'id': id});
   }
 
        /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> listUser(String id) {
+    Future<http.Response> listUser(String id,String jwt) {
     var url = wsURL + 'list' + '/' + id;
     print(url);
-    return http.get(url);
+    return http
+        .get(url, headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
   }
 
 

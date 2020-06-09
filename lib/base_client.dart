@@ -38,6 +38,7 @@ class BaseClient {
   /// the token of a channel
   String token;
 
+
   /// [bool enableSecurity] indicates if will be used a secure protocol
   /// and [bool devMode] changes the URL of remove for development mode
   BaseClient(bool enableSecurity, bool devMode) {

@@ -46,6 +46,9 @@ class UsersCLI {
 
   String _id;
 
+  // stores the jwt
+  String _jwt;
+
   UsersCLI() {
     _host = 'localhost';
     _port = '9080';
@@ -74,6 +77,7 @@ class UsersCLI {
 
     // the main menu options
     var options = [
+      'Login',
       'Create user',
       'Update user',
       'Delete user',
@@ -89,36 +93,52 @@ class UsersCLI {
     print(cli);
 
     // executing actions according the options
-    if (cli == options[0]) {
+      if (cli == options[0]) {
+      // Login
+      await optionLogin();
+    } else if (cli == options[1]) {
       // create user
       await optionCreateUser();
-    } else if (cli == options[1]) {
+    } else if (cli == options[2]) {
       // update user
       await optionUpdateUser();
-   }  else if (cli == options[2]) {
+   }  else if (cli == options[3]) {
       // delete user
       await optionDeleteUser();
-   }  else if (cli == options[3]) {
+   }  else if (cli == options[4]) {
       // list users
       await optionListUser();
-    } else if (cli == options[4]) {
+    } else if (cli == options[5]) {
       // Configure
       optionConfigure();
-    } else if (cli == options[5]) {
+    } else if (cli == options[6]) {
       loop = false;
       clear();
     }
     return Future.value(loop);
   }
 
+    /// Executes the menu option to create a new channel
+  void optionLogin() async {
+    try {
+      clear();
+      askEmail();
+      askPassword();
+
+      var response = await _usersWebService.login(_email, _password);
+      _jwt = response.body;
+      _response = 'JWTL ${_jwt}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
 void optionCreateUser() async{
     clear();
     try {
-      // questionName();
-      // questionEmail();
-     _name = prompts.get('name of a user: ', defaultsTo: _name);
-     _email = prompts.get('name of a email: ', defaultsTo: _email);
-     _password = prompts.get('name of a password: ', defaultsTo: _password);
+      askName();
+      askEmail();
+      askPassword();
       var response = await _usersWebService.createUser(_name,_email,_password);
       _response = 'response: ${response.body}';
     } on Exception {
@@ -129,11 +149,11 @@ void optionCreateUser() async{
   void optionUpdateUser() async{
     clear();
     try {
-     _id = prompts.get('your id: ', defaultsTo: _id);
-     _name = prompts.get('name of a user: ', defaultsTo: _name);
-     _email = prompts.get('name of a email: ', defaultsTo: _email);
-     _password = prompts.get('name of a password: ', defaultsTo: _password);
-      var response = await _usersWebService.updateUser(_id, _name,_email,_password);
+      askId();
+      askName();
+      askEmail();
+      askPassword();
+      var response = await _usersWebService.updateUser(_id, _name,_email,_password,_jwt);
       
       _response = 'response: ${response.body}';
     } on Exception {
@@ -144,8 +164,8 @@ void optionCreateUser() async{
    void optionDeleteUser() async{
     clear();
     try {
-     _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _usersWebService.deleteUser(_id);
+      askId();
+      var response = await _usersWebService.deleteUser(_id,_jwt);
       
       _response = 'response: ${response.body}';
     } on Exception {
@@ -156,8 +176,8 @@ void optionCreateUser() async{
      void optionListUser() async{
     clear();
     try {
-     _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _usersWebService.listUser(_id);
+      askId();
+      var response = await _usersWebService.listUser(_id,_jwt);
       
       _response = 'response: ${response.body}';
     } on Exception {
@@ -169,10 +189,10 @@ void optionCreateUser() async{
 
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
-      questionHost();
-      questionPort();
-      questionSecurity();
-      questionDevMode();
+      askHost();
+      askPort();
+      askSecurity();
+      askDevMode();
 
     _usersWebService.changeServiceURL(_security, _devMode, _host, _port);
 
@@ -190,33 +210,46 @@ void optionCreateUser() async{
   }
 
   /// ask about service host
-  void questionHost() {
+  void askHost() {
     _host = prompts.get('Host: ', defaultsTo: _host);
   }
 
   /// ask about service port
-  void questionPort() {
+  void askPort() {
     _port = prompts.get('Port: ', defaultsTo: _port);
   }
 
   /// ask about service security (http or https)
-  void questionSecurity() {
+  void askSecurity() {
     _security = prompts.getBool('Enable security: ', defaultsTo: _security);
   }
 
   /// enables dev mode
-  void questionDevMode() {
+  void askDevMode() {
     _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
   }
 
-  //  void questionName() {
-  //     _name = prompts.get('name of a user: ', defaultsTo: _name);
+    /// ask about the user's e-mail
+  void askEmail() {
+    _email = prompts.get('E-mail: ', defaultsTo: _email);
+  }
 
-  //   }
-  //   void questionEmail() {
-  //     _email = prompts.get('name of a email: ', defaultsTo: _email);
+  /// ask about the user's password
+  void askPassword() {
+    _password = prompts.get('Password: ', defaultsTo: _password);
+  }
 
-  //   }
+    /// ask about the user's name
+  void askName() {
+    _name = prompts.get('Name: ', defaultsTo: _name);
+  }
+
+    /// ask about the ID's name
+  void askId() {
+    _id = prompts.get('ID: ', defaultsTo: _id);
+  }
+
+
     
 
 }
