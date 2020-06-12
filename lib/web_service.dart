@@ -46,6 +46,11 @@ class UsersWebService extends BaseClient {
     return http.post(url, body: {'name': name, 'email': email, 'password': password});
   }
 
+    Future<http.Response> forgotUser(String email) {
+    var url = wsURL + 'create';
+    return http.post(url, body: {'email': email});
+  }
+
    /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
     Future<http.Response> updateUser(String id, String name, String email, String password, String jwt) {

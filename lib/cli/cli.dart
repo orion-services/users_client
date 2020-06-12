@@ -79,6 +79,7 @@ class UsersCLI {
     var options = [
       'Login',
       'Create user',
+      'Forgot user',
       'Update user',
       'Delete user',
       'List user',
@@ -101,17 +102,20 @@ class UsersCLI {
       await optionCreateUser();
     } else if (cli == options[2]) {
       // update user
+      await optionForgotUser();
+    } else if (cli == options[3]) {
+      // update user
       await optionUpdateUser();
-   }  else if (cli == options[3]) {
+   }  else if (cli == options[4]) {
       // delete user
       await optionDeleteUser();
-   }  else if (cli == options[4]) {
+   }  else if (cli == options[5]) {
       // list users
       await optionListUser();
-    } else if (cli == options[5]) {
+    } else if (cli == options[6]) {
       // Configure
       optionConfigure();
-    } else if (cli == options[6]) {
+    } else if (cli == options[7]) {
       loop = false;
       clear();
     }
@@ -140,6 +144,17 @@ void optionCreateUser() async{
       askEmail();
       askPassword();
       var response = await _usersWebService.createUser(_name,_email,_password);
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
+  void optionForgotUser() async{
+    clear();
+    try {
+      askEmail();
+      var response = await _usersWebService.forgotUser(_email);
       _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
