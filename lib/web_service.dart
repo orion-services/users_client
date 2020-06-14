@@ -39,15 +39,17 @@ class UsersWebService extends BaseClient {
   }
 
 
-    /// Web Serive: creates a user in the Oriton User microservices
+    /// Web Serive: creates a user in the Orion User microservices
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
     return http.post(url, body: {'name': name, 'email': email, 'password': password});
   }
 
+   /// Web Serive: retrieve a password in the Oriton User microservices
+  /// and returns [Future<http.Response>]
     Future<http.Response> forgotUser(String email) {
-    var url = wsURL + 'create';
+    var url = wsURL + 'forgot';
     return http.post(url, body: {'email': email});
   }
 
