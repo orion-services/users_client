@@ -53,6 +53,13 @@ class UsersWebService extends BaseClient {
     return http.post(url, body: {'email': email});
   }
 
+     /// Web Serive: retrieve a password in the Oriton User microservices
+  /// and returns [Future<http.Response>]
+    Future<http.Response> retrieveUser(String email, String password) {
+    var url = wsURL + 'retrieve';
+    return http.post(url, body: {'email': email, 'password': password});
+  }
+
    /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
     Future<http.Response> updateUser(String id, String name, String email, String password, String jwt) {

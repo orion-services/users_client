@@ -46,6 +46,9 @@ class UsersCLI {
 
   String _id;
 
+  
+
+
   // stores the jwt
   String _jwt;
 
@@ -57,6 +60,7 @@ class UsersCLI {
     _email = '';
     _response = '';
     _id = '';
+    
 
     // Seting the secure to false and development to true
     _security = false;
@@ -80,6 +84,7 @@ class UsersCLI {
       'Login',
       'Create user',
       'Forgot user',
+      'Retrieve user',
       'Update user',
       'Delete user',
       'List user',
@@ -105,17 +110,20 @@ class UsersCLI {
       await optionForgotUser();
     } else if (cli == options[3]) {
       // update user
+      await optionRetrieveUser();
+    } else if (cli == options[4]) {
+      // update user
       await optionUpdateUser();
-   }  else if (cli == options[4]) {
+   }  else if (cli == options[5]) {
       // delete user
       await optionDeleteUser();
-   }  else if (cli == options[5]) {
+   }  else if (cli == options[6]) {
       // list users
       await optionListUser();
-    } else if (cli == options[6]) {
+    } else if (cli == options[7]) {
       // Configure
       optionConfigure();
-    } else if (cli == options[7]) {
+    } else if (cli == options[8]) {
       loop = false;
       clear();
     }
@@ -143,6 +151,8 @@ void optionCreateUser() async{
       askName();
       askEmail();
       askPassword();
+      
+      
       var response = await _usersWebService.createUser(_name,_email,_password);
       _response = 'response: ${response.body}';
     } on Exception {
@@ -155,6 +165,18 @@ void optionCreateUser() async{
     try {
       askEmail();
       var response = await _usersWebService.forgotUser(_email);
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+  }
+
+    void optionRetrieveUser() async{
+    clear();
+    try {
+      askEmail();
+      askPassword();
+      var response = await _usersWebService.retrieveUser(_email,_password);
       _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
@@ -253,6 +275,7 @@ void optionCreateUser() async{
   void askPassword() {
     _password = prompts.get('Password: ', defaultsTo: _password);
   }
+
 
     /// ask about the user's name
   void askName() {

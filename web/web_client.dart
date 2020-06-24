@@ -76,6 +76,7 @@ class WebClientExample {
     var email = (querySelector('#emailCreate') as InputElement).value;
     var password = (querySelector('#passwordCreate') as InputElement).value;
     
+   
       String data;
         try {
           // create a user in users service
@@ -146,11 +147,6 @@ class WebClientExample {
           appendNode(data);
         }
   }
-
-  //  String getPortValue() {
-  //   var port = (querySelector('#port') as InputElement).value;
-  //   return (port == '') ? '9081' : port;
-  // }
 
 
   /// Handles the [MouseEvent] of the checkboxes
