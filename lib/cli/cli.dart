@@ -44,6 +44,8 @@ class UsersCLI {
 
   String _password;
 
+  String _auth;
+
   String _id;
 
   
@@ -83,7 +85,6 @@ class UsersCLI {
     var options = [
       'Login',
       'Create user',
-      'Forgot user',
       'Retrieve user',
       'Update user',
       'Delete user',
@@ -107,23 +108,20 @@ class UsersCLI {
       await optionCreateUser();
     } else if (cli == options[2]) {
       // update user
-      await optionForgotUser();
+      await optionForgotRetrieveUser();
     } else if (cli == options[3]) {
       // update user
-      await optionRetrieveUser();
-    } else if (cli == options[4]) {
-      // update user
       await optionUpdateUser();
-   }  else if (cli == options[5]) {
+   }  else if (cli == options[4]) {
       // delete user
       await optionDeleteUser();
-   }  else if (cli == options[6]) {
+   }  else if (cli == options[5]) {
       // list users
       await optionListUser();
-    } else if (cli == options[7]) {
+    } else if (cli == options[6]) {
       // Configure
       optionConfigure();
-    } else if (cli == options[8]) {
+    } else if (cli == options[7]) {
       loop = false;
       clear();
     }
@@ -160,28 +158,29 @@ void optionCreateUser() async{
     }
   }
 
-  void optionForgotUser() async{
+  void optionForgotRetrieveUser() async{
     clear();
-    try {
-      askEmail();
-      var response = await _usersWebService.forgotUser(_email);
-      _response = 'response: ${response.body}';
-    } on Exception {
-      _response = 'Connection refused';
-    }
+    
+        try {
+          askEmail();
+          var response = await _usersWebService.forgotUser(_email);
+          _response = 'response: ${response.body}';
+        } on Exception {
+          _response = 'Connection refused';
+        }
+
+          
+        try {
+          askAuth();
+          askPassword();
+          var response = await _usersWebService.retrieveUser(_auth,_password);
+          _response = 'response: ${response.body}';
+        } on Exception {
+          _response = 'Connection refused';
+        }
   }
 
-    void optionRetrieveUser() async{
-    clear();
-    try {
-      askEmail();
-      askPassword();
-      var response = await _usersWebService.retrieveUser(_email,_password);
-      _response = 'response: ${response.body}';
-    } on Exception {
-      _response = 'Connection refused';
-    }
-  }
+
 
   void optionUpdateUser() async{
     clear();
@@ -269,6 +268,10 @@ void optionCreateUser() async{
     /// ask about the user's e-mail
   void askEmail() {
     _email = prompts.get('E-mail: ', defaultsTo: _email);
+  }
+
+  void askAuth() {
+    _auth = prompts.get('Auth: ', defaultsTo: _auth);
   }
 
   /// ask about the user's password
