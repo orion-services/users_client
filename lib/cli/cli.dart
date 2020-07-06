@@ -44,7 +44,7 @@ class UsersCLI {
 
   String _password;
 
-  String _auth;
+  String _hash;
 
   String _id;
 
@@ -152,7 +152,7 @@ void optionCreateUser() async{
       
       
       var response = await _usersWebService.createUser(_name,_email,_password);
-      _response = 'response: ${response.body}';
+      _response = '${response}: ${_name}, ${_email}';
     } on Exception {
       _response = 'Connection refused';
     }
@@ -171,9 +171,9 @@ void optionCreateUser() async{
 
           
         try {
-          askAuth();
+          askHash();
           askPassword();
-          var response = await _usersWebService.retrieveUser(_auth,_password);
+          var response = await _usersWebService.retrieveUser(_hash,_password);
           _response = 'response: ${response.body}';
         } on Exception {
           _response = 'Connection refused';
@@ -270,8 +270,8 @@ void optionCreateUser() async{
     _email = prompts.get('E-mail: ', defaultsTo: _email);
   }
 
-  void askAuth() {
-    _auth = prompts.get('Auth: ', defaultsTo: _auth);
+  void askHash() {
+    _hash = prompts.get('Auth: ', defaultsTo: _hash);
   }
 
   /// ask about the user's password
