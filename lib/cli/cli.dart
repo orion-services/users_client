@@ -156,11 +156,6 @@ void optionCreateUser() async{
       
     var response = await _usersWebService.createUser(_name,_email,_password);
 
-    //     if(_response.contains('"id":0')){
-    //      _response = 'response: email exist in our db';
-    //  } else {
-    //     _response = 'response: ${response.body}';
-    //  }
 
     if(_response.isEmpty){
          _response = 'response: email exist in our db';
