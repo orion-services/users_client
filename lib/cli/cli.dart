@@ -48,6 +48,8 @@ class UsersCLI {
 
   String _id;
 
+  String _nullString;
+
   
 
 
@@ -62,6 +64,7 @@ class UsersCLI {
     _email = '';
     _response = '';
     _id = '';
+    _nullString = 'response: {"id":0}';
     
 
     // Seting the secure to false and development to true
@@ -151,10 +154,22 @@ void optionCreateUser() async{
       askPassword();
       
       
-      var response = await _usersWebService.createUser(_name,_email,_password);
-      _response = '${response}: ${_name}, ${_email}';
+    var response = await _usersWebService.createUser(_name,_email,_password);
+
+    //     if(_response.contains('"id":0')){
+    //      _response = 'response: email exist in our db';
+    //  } else {
+    //     _response = 'response: ${response.body}';
+    //  }
+
+    if(_response.isEmpty){
+         _response = 'response: email exist in our db';
+     } else {
+        _response = 'response: ${response.body}';
+     }
+      
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 

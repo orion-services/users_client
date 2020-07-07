@@ -15,6 +15,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:orion_users_client/base_client.dart';
 
+String teste = 'teste';
+
 /// Web Service for User microservice
 class UsersWebService extends BaseClient {
   /// instatiate a UserWebService object.
