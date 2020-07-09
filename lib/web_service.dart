@@ -33,62 +33,60 @@ class UsersWebService extends BaseClient {
     token = tokenChannel;
   }
 
-    /// Web Serive: login the Orion Users microservices
+  /// Web Serive: login the Orion Users microservices
   /// and returns [Future<http.Response>]
   Future<http.Response> login(String email, String password) {
     var url = wsURL + 'login';
     return http.post(url, body: {'email': email, 'password': password});
   }
 
-
-    /// Web Serive: creates a user in the Orion User microservices
+  /// Web Serive: creates a user in the Orion User microservices
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
-    return http.post(url, body: {'name': name, 'email': email, 'password': password});
+    return http
+        .post(url, body: {'name': name, 'email': email, 'password': password});
   }
 
-   /// Web Serive: retrieve a password in the Oriton User microservices
+  /// Web Serive: retrieve a password in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> forgotUser(String email) {
+  Future<http.Response> forgotUser(String email) {
     var url = wsURL + 'forgot';
     return http.post(url, body: {'email': email});
   }
 
-     /// Web Serive: retrieve a password in the Oriton User microservices
+  /// Web Serive: retrieve a password in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> retrieveUser(String hash, String password) {
+  Future<http.Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
-    return http.post(url, body: {'hash': hash,'password': password});
+    return http.post(url, body: {'hash': hash, 'password': password});
   }
 
-
-   /// Web Serive: uodate a user in the Oriton User microservices
+  /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> updateUser(String id, String name, String email, String password, String jwt) {
+  Future<http.Response> updateUser(
+      String id, String name, String email, String password, String jwt) {
     var url = wsURL + 'update';
-    return http.post(url, 
+    return http.post(url,
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
-     /// Web Serive: uodate a user in the Oriton User microservices
+  /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> deleteUser(String id,String jwt) {
+  Future<http.Response> deleteUser(String id, String jwt) {
     var url = wsURL + 'delete';
-    return http.post(url, 
+    return http.post(url,
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'id': id});
   }
 
-       /// Web Serive: uodate a user in the Oriton User microservices
+  /// Web Serive: uodate a user in the Oriton User microservices
   /// and returns [Future<http.Response>]
-    Future<http.Response> listUser(String id,String jwt) {
+  Future<http.Response> listUser(String id, String jwt) {
     var url = wsURL + 'list' + '/' + id;
     print(url);
     return http
         .get(url, headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
   }
-
-
 }

@@ -11,7 +11,6 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 import 'dart:io';
-import 'dart:convert';
 import 'package:orion_users_client/web_service.dart';
 import 'package:prompts/prompts.dart' as prompts;
 
@@ -50,9 +49,6 @@ class UsersCLI {
 
   String _nullString;
 
-  
-
-
   // stores the jwt
   String _jwt;
 
@@ -65,7 +61,6 @@ class UsersCLI {
     _response = '';
     _id = '';
     _nullString = 'response: {"id":0}';
-    
 
     // Seting the secure to false and development to true
     _security = false;
@@ -103,7 +98,7 @@ class UsersCLI {
     print(cli);
 
     // executing actions according the options
-      if (cli == options[0]) {
+    if (cli == options[0]) {
       // Login
       await optionLogin();
     } else if (cli == options[1]) {
@@ -115,10 +110,10 @@ class UsersCLI {
     } else if (cli == options[3]) {
       // update user
       await optionUpdateUser();
-   }  else if (cli == options[4]) {
+    } else if (cli == options[4]) {
       // delete user
       await optionDeleteUser();
-   }  else if (cli == options[5]) {
+    } else if (cli == options[5]) {
       // list users
       await optionListUser();
     } else if (cli == options[6]) {
@@ -131,7 +126,7 @@ class UsersCLI {
     return Future.value(loop);
   }
 
-    /// Executes the menu option to create a new channel
+  /// Executes the menu option to create a new channel
   void optionLogin() async {
     try {
       clear();
@@ -146,99 +141,93 @@ class UsersCLI {
     }
   }
 
-void optionCreateUser() async{
+  void optionCreateUser() async {
     clear();
     try {
       askName();
       askEmail();
       askPassword();
-      
-      
-    var response = await _usersWebService.createUser(_name,_email,_password);
 
+      var response =
+          await _usersWebService.createUser(_name, _email, _password);
 
-    if(_response.isEmpty){
-         _response = 'response: email exist in our db';
-     } else {
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
         _response = 'response: ${response.body}';
-     }
-      
+      }
     } on Exception {
       _response = 'error';
     }
   }
 
-  void optionForgotRetrieveUser() async{
+  void optionForgotRetrieveUser() async {
     clear();
-    
-        try {
-          askEmail();
-          var response = await _usersWebService.forgotUser(_email);
-          _response = 'response: ${response.body}';
-        } on Exception {
-          _response = 'Connection refused';
-        }
 
-          
-        try {
-          askHash();
-          askPassword();
-          var response = await _usersWebService.retrieveUser(_hash,_password);
-          _response = 'response: ${response.body}';
-        } on Exception {
-          _response = 'Connection refused';
-        }
+    try {
+      askEmail();
+      var response = await _usersWebService.forgotUser(_email);
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
+
+    try {
+      askHash();
+      askPassword();
+      var response = await _usersWebService.retrieveUser(_hash, _password);
+      _response = 'response: ${response.body}';
+    } on Exception {
+      _response = 'Connection refused';
+    }
   }
 
-
-
-  void optionUpdateUser() async{
+  void optionUpdateUser() async {
     clear();
     try {
       askId();
       askName();
       askEmail();
       askPassword();
-      var response = await _usersWebService.updateUser(_id, _name,_email,_password,_jwt);
-      
+      var response = await _usersWebService.updateUser(
+          _id, _name, _email, _password, _jwt);
+
       _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
     }
   }
 
-   void optionDeleteUser() async{
+  void optionDeleteUser() async {
     clear();
     try {
       askId();
-      var response = await _usersWebService.deleteUser(_id,_jwt);
-      
+      var response = await _usersWebService.deleteUser(_id, _jwt);
+
       _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
     }
   }
 
-     void optionListUser() async{
+  void optionListUser() async {
     clear();
     try {
       askId();
-      var response = await _usersWebService.listUser(_id,_jwt);
-      
+      var response = await _usersWebService.listUser(_id, _jwt);
+
       _response = 'response: ${response.body}';
     } on Exception {
       _response = 'Connection refused';
     }
   }
-
-
 
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
-      askHost();
-      askPort();
-      askSecurity();
-      askDevMode();
+    askHost();
+    askPort();
+    askSecurity();
+    askDevMode();
 
     _usersWebService.changeServiceURL(_security, _devMode, _host, _port);
 
@@ -275,7 +264,7 @@ void optionCreateUser() async{
     _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
   }
 
-    /// ask about the user's e-mail
+  /// ask about the user's e-mail
   void askEmail() {
     _email = prompts.get('E-mail: ', defaultsTo: _email);
   }
@@ -289,18 +278,13 @@ void optionCreateUser() async{
     _password = prompts.get('Password: ', defaultsTo: _password);
   }
 
-
-    /// ask about the user's name
+  /// ask about the user's name
   void askName() {
     _name = prompts.get('Name: ', defaultsTo: _name);
   }
 
-    /// ask about the ID's name
+  /// ask about the ID's name
   void askId() {
     _id = prompts.get('ID: ', defaultsTo: _id);
   }
-
-
-    
-
 }
