@@ -167,18 +167,28 @@ class UsersCLI {
     try {
       askEmail();
       var response = await _usersWebService.forgotUser(_email);
-      _response = 'response: ${response.body}';
+
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
 
     try {
       askHash();
       askPassword();
       var response = await _usersWebService.retrieveUser(_hash, _password);
-      _response = 'response: ${response.body}';
+
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 
@@ -192,9 +202,13 @@ class UsersCLI {
       var response = await _usersWebService.updateUser(
           _id, _name, _email, _password, _jwt);
 
-      _response = 'response: ${response.body}';
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 
@@ -204,9 +218,13 @@ class UsersCLI {
       askId();
       var response = await _usersWebService.deleteUser(_id, _jwt);
 
-      _response = 'response: ${response.body}';
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 
@@ -216,9 +234,13 @@ class UsersCLI {
       askId();
       var response = await _usersWebService.listUser(_id, _jwt);
 
-      _response = 'response: ${response.body}';
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 
