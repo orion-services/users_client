@@ -270,7 +270,7 @@ class UsersCLI {
   }
 
   void askHash() {
-    _hash = prompts.get('Auth: ', defaultsTo: _hash);
+    _hash = prompts.get('Hash: ', defaultsTo: _hash);
   }
 
   /// ask about the user's password
