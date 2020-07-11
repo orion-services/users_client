@@ -141,6 +141,7 @@ class UsersCLI {
     }
   }
 
+  //Client create a user
   void optionCreateUser() async {
     clear();
     try {
@@ -161,6 +162,7 @@ class UsersCLI {
     }
   }
 
+  //Retrieve a user, with email and password
   void optionForgotRetrieveUser() async {
     clear();
 
@@ -192,6 +194,7 @@ class UsersCLI {
     }
   }
 
+  //Update a user
   void optionUpdateUser() async {
     clear();
     try {
@@ -212,6 +215,7 @@ class UsersCLI {
     }
   }
 
+  //Delete a user
   void optionDeleteUser() async {
     clear();
     try {
@@ -228,6 +232,7 @@ class UsersCLI {
     }
   }
 
+  //List a user
   void optionListUser() async {
     clear();
     try {
