@@ -1,4 +1,4 @@
-/// Copyright 2020 Orion Services
+/// Copyright 2022 Orion Services @ https://github.com/orion-services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
 /// You may obtain a copy of the License at
@@ -11,20 +11,16 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 import 'dart:io';
-import 'dart:convert';
 import 'package:orion_users_client/web_service.dart';
 import 'package:prompts/prompts.dart' as prompts;
 
 /// CLI client for Orion User micro service
-class UserCLI {
+class UsersCLI {
   // stores the host of user service
   String _host;
 
   // stores the port
   String _port;
-
-  // enable development mode
-  bool _devMode;
 
   // enables security https or wss
   bool _security;
@@ -36,27 +32,36 @@ class UserCLI {
   String _response;
 
   // the User Web Service client
-  UserWebService _userWebService;
+  UsersWebService _usersWebService;
 
   String _name;
 
   String _email;
 
+  String _password;
+
+  String _hash;
+
   String _id;
 
-  UserCLI() {
+  String _nullString;
+
+  // stores the jwt
+  String _jwt;
+
+  UsersCLI() {
     _host = 'localhost';
-    _port = '9081';
+    _port = '8080';
     _token = '';
     _name = '';
     _email = '';
     _response = '';
     _id = '';
+    _nullString = 'response: {"id":0}';
 
-    // Seting the secure to false and development to true
+    // Setting the secure to false and development to true
     _security = false;
-    _devMode = true;
-    _userWebService = UserWebService(_security, _devMode);
+    _usersWebService = UsersWebService(_security);
   }
 
   // Prints the menu
@@ -73,9 +78,7 @@ class UserCLI {
     // the main menu options
     var options = [
       'Create user',
-      'Update user',
-      'Delete user',
-      'List user',
+      'Login',
       'Configurations',
       'Exit'
     ];
@@ -88,91 +91,150 @@ class UserCLI {
 
     // executing actions according the options
     if (cli == options[0]) {
-      // create user
       await optionCreateUser();
     } else if (cli == options[1]) {
-      // update user
-      await optionUpdateUser();
-   }  else if (cli == options[2]) {
-      // delete user
-      await optionDeleteUser();
-   }  else if (cli == options[3]) {
-      // list users
-      await optionListUser();
-    } else if (cli == options[4]) {
-      // Configure
-      optionConfigure();
-    } else if (cli == options[5]) {
+      await optionLogin();
+    } else if (cli == options[2]) {
+      await optionConfigure();
+    } else if (cli == options[3]) {
       loop = false;
       clear();
     }
     return Future.value(loop);
   }
 
-void optionCreateUser() async{
-    clear();
+  /// Executes the menu option to create a new channel
+  void optionLogin() async {
     try {
-      // questionName();
-      // questionEmail();
-     _name = prompts.get('name of a user: ', defaultsTo: _name);
-     _email = prompts.get('name of a email: ', defaultsTo: _email);
-      var response = await _userWebService.createUser(_name,_email);
-      _response = 'response: ${response.body}';
+      clear();
+      askEmail();
+      askPassword();
+
+      var response = await _usersWebService.login(_email, _password);
+      _jwt = response.body;
+      _response = '${_jwt}';
     } on Exception {
       _response = 'Connection refused';
     }
   }
 
-  void optionUpdateUser() async{
+  //Client create a user
+  void optionCreateUser() async {
     clear();
     try {
-     _id = prompts.get('your id: ', defaultsTo: _id);
-     _name = prompts.get('name of a user: ', defaultsTo: _name);
-     _email = prompts.get('name of a email: ', defaultsTo: _email);
-      var response = await _userWebService.updateUser(_id, _name,_email);
-      
-      _response = 'response: ${response.body}';
+      askName();
+      askEmail();
+      askPassword();
+
+      var response =
+          await _usersWebService.createUser(_name, _email, _password);
+
+      if (response.statusCode == 400) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 
-   void optionDeleteUser() async{
+  //Retrieve a user, with email and password
+  void optionForgotRetrieveUser() async {
     clear();
+
     try {
-     _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _userWebService.deleteUser(_id);
-      
-      _response = 'response: ${response.body}';
+      askEmail();
+      var response = await _usersWebService.forgotUser(_email);
+
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
+    }
+
+    try {
+      askHash();
+      askPassword();
+      var response = await _usersWebService.retrieveUser(_hash, _password);
+
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+    } on Exception {
+      _response = 'error';
     }
   }
 
-     void optionListUser() async{
+  //Update a user
+  void optionUpdateUser() async {
     clear();
     try {
-     _id = prompts.get('your id: ', defaultsTo: _id);
-      var response = await _userWebService.listUser(_id);
-      
-      _response = 'response: ${response.body}';
+      askId();
+      askName();
+      askEmail();
+      askPassword();
+      var response = await _usersWebService.updateUser(
+          _id, _name, _email, _password, _jwt);
+
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
     } on Exception {
-      _response = 'Connection refused';
+      _response = 'error';
     }
   }
 
+  //Delete a user
+  void optionDeleteUser() async {
+    clear();
+    try {
+      askId();
+      var response = await _usersWebService.deleteUser(_id, _jwt);
 
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+    } on Exception {
+      _response = 'error';
+    }
+  }
+
+  //List a user
+  void optionListUser() async {
+    clear();
+    try {
+      askId();
+      var response = await _usersWebService.listUser(_id, _jwt);
+
+      if (response.statusCode == 409) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+    } on Exception {
+      _response = 'error';
+    }
+  }
 
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
-      questionHost();
-      questionPort();
-      questionSecurity();
-      questionDevMode();
+    askHost();
+    askPort();
+    askSecurity();
 
-    _userWebService.changeServiceURL(_security, _devMode, _host, _port);
+    _usersWebService.changeServiceURL(_security, _host, _port);
 
-    _response = 'Web Service URL: ' + _userWebService.wsURL;
+    _response = 'Service URL: ' + _usersWebService.wsURL;
   }
 
   /// clear the console
@@ -186,33 +248,41 @@ void optionCreateUser() async{
   }
 
   /// ask about service host
-  void questionHost() {
+  void askHost() {
     _host = prompts.get('Host: ', defaultsTo: _host);
   }
 
   /// ask about service port
-  void questionPort() {
+  void askPort() {
     _port = prompts.get('Port: ', defaultsTo: _port);
   }
 
   /// ask about service security (http or https)
-  void questionSecurity() {
-    _security = prompts.getBool('Enable security: ', defaultsTo: _security);
+  void askSecurity() {
+    _security = prompts.getBool('Enable https: ', defaultsTo: _security);
   }
 
-  /// enables dev mode
-  void questionDevMode() {
-    _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
+  /// ask about the user's e-mail
+  void askEmail() {
+    _email = prompts.get('E-mail: ', defaultsTo: _email);
   }
 
-  //  void questionName() {
-  //     _name = prompts.get('name of a user: ', defaultsTo: _name);
+  void askHash() {
+    _hash = prompts.get('Hash: ', defaultsTo: _hash);
+  }
 
-  //   }
-  //   void questionEmail() {
-  //     _email = prompts.get('name of a email: ', defaultsTo: _email);
+  /// ask about the user's password
+  void askPassword() {
+    _password = prompts.get('Password: ', defaultsTo: _password);
+  }
 
-  //   }
-    
+  /// ask about the user's name
+  void askName() {
+    _name = prompts.get('Name: ', defaultsTo: _name);
+  }
 
+  /// ask about the ID's name
+  void askId() {
+    _id = prompts.get('ID: ', defaultsTo: _id);
+  }
 }

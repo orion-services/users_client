@@ -1,4 +1,4 @@
-/// Copyright 2020 Orion Services
+/// Copyright 2022 Orion Services @ https://github.com/orion-services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
 /// You may obtain a copy of the License at
@@ -16,7 +16,7 @@ import 'package:http/http.dart';
 import 'package:orion_users_client/web_service.dart';
 import 'package:orion_users_client/web_socket.dart';
 
-/// methos main
+/// main
 void main() {
   WebClientExample();
 }
@@ -24,17 +24,20 @@ void main() {
 /// Examples of how to use UsersWebService and UsersWebSocket clients in
 /// simple Web page
 class WebClientExample {
+
   /// Users Web Service client
-  UserWebService _userWS;
+  UsersWebService _usersWS;
 
   /// Users Web Socket client
-  UserWebSocket _userSocket;
+  UsersWebSocket _usersSocket;
 
+   /// JSON Web Token;
+  String _jwt;
 
   WebClientExample() {
     // instantiating the users web service client
-    _userWS = UserWebService(getSecureValue(), getDevelopmentValue());
-    _userSocket = UserWebSocket(getSecureValue(), getDevelopmentValue());
+    _usersWS = UsersWebService(getSecureValue(), getDevelopmentValue());
+    _usersSocket = UsersWebSocket(getSecureValue(), getDevelopmentValue());
 
     // adding buttons listeners
     // Web Service
@@ -43,8 +46,6 @@ class WebClientExample {
     querySelector('#btnDeleteUser').onClick.listen(deleteUserHandler);
     querySelector('#btnListUser').onClick.listen(listUserHandler);
 
-   
-
     // adding checkboxes listeners to change service URL to run with secure
     // connection and dev mode
     querySelector('#secure').onClick.listen(urlHandler);
@@ -52,17 +53,32 @@ class WebClientExample {
     querySelector('#btnChangeHost').onClick.listen(urlHandler);
   }
 
+    /// Handles the [MouseEvent event] of the login button
+  void loginHandler(MouseEvent event) async {
+    try {
+      var user = (querySelector('#user') as InputElement).value;
+      var password = (querySelector('#password') as InputElement).value;
+      var response = await _usersWS.login(user, password);
+      _jwt = response.body;
+    } on Exception catch (e, stacktrace) {
+      _jwt = stacktrace.toString();
+    } finally {
+      appendNode(_jwt);
+    }
+  }
+
   /// Handles the [MouseEvent event] of the button create user
   void createUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var name = (querySelector('#nameCreate') as InputElement).value;
     var email = (querySelector('#emailCreate') as InputElement).value;
-    
+    var password = (querySelector('#passwordCreate') as InputElement).value;
+
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.createUser(name, email);
-          data = json.decode(response.body)['name'+'email'];
+          var response = await _usersWS.createUser(name, email, password);
+          data = json.decode(response.body)['name'+'email'+'password'];
 
         } on Exception {
           data = 'connection refused';
@@ -73,16 +89,17 @@ class WebClientExample {
   }
 
   void updateUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var id = (querySelector('#idUpdate') as InputElement).value;
     var name = (querySelector('#nameUpdate') as InputElement).value;
     var email = (querySelector('#emailUpdate') as InputElement).value;
-    
+    var password = (querySelector('#passwordUpdate') as InputElement).value;
+
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.updateUser(id, name, email);
-          data = json.decode(response.body)['id'+'name'+'email'];
+          var response = await _usersWS.updateUser(id, name, email, password, _jwt);
+          data = json.decode(response.body)['id'+'name'+'email'+'password'];
 
         } on Exception {
           data = 'connection refused';
@@ -93,13 +110,13 @@ class WebClientExample {
   }
 
     void deleteUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var id = (querySelector('#idDelete') as InputElement).value;
-    
+
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.deleteUser(id);
+          var response = await _usersWS.deleteUser(id,_jwt);
           data = json.decode(response.body)['id'];
 
         } on Exception {
@@ -111,13 +128,13 @@ class WebClientExample {
   }
 
     void listUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var id = (querySelector('#idList') as InputElement).value;
-    
+
       String data;
         try {
           // create a user in users service
-          var response = await _userWS.listUser(id);
+          var response = await _usersWS.listUser(id,_jwt);
           data = json.decode(response.body)['id'];
 
         } on Exception {
@@ -128,25 +145,19 @@ class WebClientExample {
         }
   }
 
-  //  String getPortValue() {
-  //   var port = (querySelector('#port') as InputElement).value;
-  //   return (port == '') ? '9081' : port;
-  // }
-
-
   /// Handles the [MouseEvent] of the checkboxes
   void urlHandler(MouseEvent event) {
     // change the url of the service
-    _userWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _usersWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
-    _userSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _usersSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
 
-    appendNode(_userWS.wsURL);
-    appendNode(_userSocket.socketURL);
+    appendNode(_usersWS.wsURL);
+    appendNode(_usersSocket.socketURL);
   }
 
-  /// [return] a boolean indicating a secure conection or not
+  /// [return] a boolean indicating a secure connection or not
   bool getSecureValue() {
     return (querySelector('#secure') as InputElement).checked;
   }
