@@ -1,7 +1,7 @@
-# Orion Users Client
+# Orion User Client
 
-Orion Users Client is a library to provide access to Orion User Service.
+Orion User Client is a Dart library to provide access to Orion User Service.
 
-## Running in command line
+## CLI - Command Line Interface
 
-With [dart](https://dart.dev) installed in your computer, go to the `bin` directory and execute `dart main.dart`
+After to install [dart](https://dart.dev) in your computer, go to the `bin` directory and execute `dart main.dart`
