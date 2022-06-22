@@ -1,4 +1,4 @@
-/// Copyright 2020 Orion Services
+/// Copyright 2022 Orion Services @ https://github.com/orion-services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
 /// You may obtain a copy of the License at
@@ -21,9 +21,6 @@ class UsersCLI {
 
   // stores the port
   String _port;
-
-  // enable development mode
-  bool _devMode;
 
   // enables security https or wss
   bool _security;
@@ -54,7 +51,7 @@ class UsersCLI {
 
   UsersCLI() {
     _host = 'localhost';
-    _port = '9080';
+    _port = '8080';
     _token = '';
     _name = '';
     _email = '';
@@ -62,10 +59,9 @@ class UsersCLI {
     _id = '';
     _nullString = 'response: {"id":0}';
 
-    // Seting the secure to false and development to true
+    // Setting the secure to false and development to true
     _security = false;
-    _devMode = true;
-    _usersWebService = UsersWebService(_security, _devMode);
+    _usersWebService = UsersWebService(_security);
   }
 
   // Prints the menu
@@ -81,12 +77,8 @@ class UsersCLI {
 
     // the main menu options
     var options = [
-      'Login',
       'Create user',
-      'Retrieve user',
-      'Update user',
-      'Delete user',
-      'List user',
+      'Login',
       'Configurations',
       'Exit'
     ];
@@ -99,27 +91,12 @@ class UsersCLI {
 
     // executing actions according the options
     if (cli == options[0]) {
-      // Login
-      await optionLogin();
-    } else if (cli == options[1]) {
-      // create user
       await optionCreateUser();
+    } else if (cli == options[1]) {
+      await optionLogin();
     } else if (cli == options[2]) {
-      // update user
-      await optionForgotRetrieveUser();
+      await optionConfigure();
     } else if (cli == options[3]) {
-      // update user
-      await optionUpdateUser();
-    } else if (cli == options[4]) {
-      // delete user
-      await optionDeleteUser();
-    } else if (cli == options[5]) {
-      // list users
-      await optionListUser();
-    } else if (cli == options[6]) {
-      // Configure
-      optionConfigure();
-    } else if (cli == options[7]) {
       loop = false;
       clear();
     }
@@ -135,7 +112,7 @@ class UsersCLI {
 
       var response = await _usersWebService.login(_email, _password);
       _jwt = response.body;
-      _response = 'JWTL ${_jwt}';
+      _response = '${_jwt}';
     } on Exception {
       _response = 'Connection refused';
     }
@@ -152,7 +129,7 @@ class UsersCLI {
       var response =
           await _usersWebService.createUser(_name, _email, _password);
 
-      if (response.statusCode == 409) {
+      if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
       } else {
         _response = 'response: ${response.body}';
@@ -254,11 +231,10 @@ class UsersCLI {
     askHost();
     askPort();
     askSecurity();
-    askDevMode();
 
-    _usersWebService.changeServiceURL(_security, _devMode, _host, _port);
+    _usersWebService.changeServiceURL(_security, _host, _port);
 
-    _response = 'Web Service URL: ' + _usersWebService.wsURL;
+    _response = 'Service URL: ' + _usersWebService.wsURL;
   }
 
   /// clear the console
@@ -283,12 +259,7 @@ class UsersCLI {
 
   /// ask about service security (http or https)
   void askSecurity() {
-    _security = prompts.getBool('Enable security: ', defaultsTo: _security);
-  }
-
-  /// enables dev mode
-  void askDevMode() {
-    _devMode = prompts.getBool('Enable devmode: ', defaultsTo: _devMode);
+    _security = prompts.getBool('Enable https: ', defaultsTo: _security);
   }
 
   /// ask about the user's e-mail

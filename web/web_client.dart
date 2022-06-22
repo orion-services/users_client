@@ -1,4 +1,4 @@
-/// Copyright 2020 Orion Services
+/// Copyright 2022 Orion Services @ https://github.com/orion-services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
 /// You may obtain a copy of the License at
@@ -16,7 +16,7 @@ import 'package:http/http.dart';
 import 'package:orion_users_client/web_service.dart';
 import 'package:orion_users_client/web_socket.dart';
 
-/// methos main
+/// main
 void main() {
   WebClientExample();
 }
@@ -24,6 +24,7 @@ void main() {
 /// Examples of how to use UsersWebService and UsersWebSocket clients in
 /// simple Web page
 class WebClientExample {
+
   /// Users Web Service client
   UsersWebService _usersWS;
 
@@ -32,7 +33,6 @@ class WebClientExample {
 
    /// JSON Web Token;
   String _jwt;
-
 
   WebClientExample() {
     // instantiating the users web service client
@@ -45,8 +45,6 @@ class WebClientExample {
     querySelector('#btnUpdateUser').onClick.listen(updateUserHandler);
     querySelector('#btnDeleteUser').onClick.listen(deleteUserHandler);
     querySelector('#btnListUser').onClick.listen(listUserHandler);
-
-   
 
     // adding checkboxes listeners to change service URL to run with secure
     // connection and dev mode
@@ -71,12 +69,11 @@ class WebClientExample {
 
   /// Handles the [MouseEvent event] of the button create user
   void createUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var name = (querySelector('#nameCreate') as InputElement).value;
     var email = (querySelector('#emailCreate') as InputElement).value;
     var password = (querySelector('#passwordCreate') as InputElement).value;
-    
-   
+
       String data;
         try {
           // create a user in users service
@@ -92,12 +89,12 @@ class WebClientExample {
   }
 
   void updateUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var id = (querySelector('#idUpdate') as InputElement).value;
     var name = (querySelector('#nameUpdate') as InputElement).value;
     var email = (querySelector('#emailUpdate') as InputElement).value;
     var password = (querySelector('#passwordUpdate') as InputElement).value;
-    
+
       String data;
         try {
           // create a user in users service
@@ -113,9 +110,9 @@ class WebClientExample {
   }
 
     void deleteUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var id = (querySelector('#idDelete') as InputElement).value;
-    
+
       String data;
         try {
           // create a user in users service
@@ -131,9 +128,9 @@ class WebClientExample {
   }
 
     void listUserHandler(MouseEvent event) async {
-    // geting the user data
+    // getting the user data
     var id = (querySelector('#idList') as InputElement).value;
-    
+
       String data;
         try {
           // create a user in users service
@@ -148,7 +145,6 @@ class WebClientExample {
         }
   }
 
-
   /// Handles the [MouseEvent] of the checkboxes
   void urlHandler(MouseEvent event) {
     // change the url of the service
@@ -161,7 +157,7 @@ class WebClientExample {
     appendNode(_usersSocket.socketURL);
   }
 
-  /// [return] a boolean indicating a secure conection or not
+  /// [return] a boolean indicating a secure connection or not
   bool getSecureValue() {
     return (querySelector('#secure') as InputElement).checked;
   }

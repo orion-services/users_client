@@ -1,6 +1,6 @@
 import 'dart:io';
 
-/// Copyright 2020 Orion Services
+/// Copyright 2022 Orion Services @ https://github.com/orion-services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
 /// You may obtain a copy of the License at
@@ -19,28 +19,24 @@ String teste = 'teste';
 
 /// Web Service for User microservice
 class UsersWebService extends BaseClient {
-  /// instatiate a UserWebService object.
+
+  /// instantiate a UserWebService object.
   /// [bool enableSecurity] indicates is the client will work with http or https
-  ///
-  /// [bool devMode] modify the service URL to operates in dev mode. In development
-  /// mode, Open liberty modifies the service URL eliminating When we are the application
-  /// name orion-user-service
-  ///
-  /// [String tockenChannel] indicates the token a channel (optional)
-  UsersWebService(bool enableSecurity, bool devMode, [String tokenChannel])
-      : super(enableSecurity, devMode) {
-    // sets the tocken of a channel
-    token = tokenChannel;
+  /// [String userToken] indicates the token (optional)
+  UsersWebService(bool enableSecurity, [String userToken])
+      : super(enableSecurity) {
+    // sets the token of a channel
+    token = userToken;
   }
 
-  /// Web Serive: Login the Orion Users microservices
+  /// Web Service: Login the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> login(String email, String password) {
     var url = wsURL + 'login';
     return http.post(url, body: {'email': email, 'password': password});
   }
 
-  /// Web Serive: Creates a user in the Orion User microservices
+  /// Web Service: Creates a user in the Orion User
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
@@ -48,21 +44,21 @@ class UsersWebService extends BaseClient {
         .post(url, body: {'name': name, 'email': email, 'password': password});
   }
 
-  /// Web Serive: Send a hash by email in the Oriton User microservices
+  /// Web Service: Send a hash by email in the Orion User
   /// and returns [Future<http.Response>]
   Future<http.Response> forgotUser(String email) {
     var url = wsURL + 'forgot';
     return http.post(url, body: {'email': email});
   }
 
-  /// Web Serive: Retrieve a password in the Oriton User microservices
+  /// Web Service: Retrieve a password in the Orion User
   /// and returns [Future<http.Response>]
   Future<http.Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
     return http.post(url, body: {'hash': hash, 'password': password});
   }
 
-  /// Web Servive: update a user in the Oriton User microservices
+  /// Web Service: update a user in the Orion User
   /// and returns [Future<http.Response>]
   Future<http.Response> updateUser(
       String id, String name, String email, String password, String jwt) {
@@ -72,7 +68,7 @@ class UsersWebService extends BaseClient {
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
-  /// Web Servive: Delete a user in the Oriton User microservices
+  /// Web Service: Delete a user in the Orion User
   /// and returns [Future<http.Response>]
   Future<http.Response> deleteUser(String id, String jwt) {
     var url = wsURL + 'delete';
@@ -81,7 +77,7 @@ class UsersWebService extends BaseClient {
         body: {'id': id});
   }
 
-  /// Web Servive: List a user in the Oriton User microservices
+  /// Web Service: List a user in the Orion User
   /// and returns [Future<http.Response>]
   Future<http.Response> listUser(String id, String jwt) {
     var url = wsURL + 'list' + '/' + id;
