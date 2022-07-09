@@ -11,8 +11,10 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 import 'dart:io';
-import 'package:orion_users_client/web_service.dart';
+import 'package:users_client/client/user_ws.dart';
 import 'package:prompts/prompts.dart' as prompts;
+import 'package:users_client/uc/user_uc_interface.dart';
+import 'package:users_client/uc/user_uc.dart';
 
 /// CLI client for Orion User micro service
 class UsersCLI {
@@ -33,6 +35,9 @@ class UsersCLI {
 
   // the User Web Service client
   UsersWebService _usersWebService;
+
+  // Use cases
+  UserUCInterface _userUC;
 
   String _name;
 
@@ -61,7 +66,7 @@ class UsersCLI {
 
     // Setting the secure to false and development to true
     _security = false;
-    _usersWebService = UsersWebService(_security);
+    _userUC = UserUC(_security);
   }
 
   // Prints the menu
@@ -76,12 +81,7 @@ class UsersCLI {
     var loop = true;
 
     // the main menu options
-    var options = [
-      'Create user',
-      'Login',
-      'Configurations',
-      'Exit'
-    ];
+    var options = ['Create user', 'Login', 'Configurations', 'Exit'];
 
     // configure the options
     var cli = prompts.choose('Options', options, defaultsTo: options[0]);
@@ -110,7 +110,7 @@ class UsersCLI {
       askEmail();
       askPassword();
 
-      var response = await _usersWebService.login(_email, _password);
+      var response = await _userUC.login(_email, _password);
       _jwt = response.body;
       _response = '${_jwt}';
     } on Exception {
@@ -118,7 +118,7 @@ class UsersCLI {
     }
   }
 
-  //Client create a user
+  /// Create an user
   void optionCreateUser() async {
     clear();
     try {
@@ -126,8 +126,7 @@ class UsersCLI {
       askEmail();
       askPassword();
 
-      var response =
-          await _usersWebService.createUser(_name, _email, _password);
+      var response = await _userUC.createUser(_name, _email, _password);
 
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
@@ -139,7 +138,7 @@ class UsersCLI {
     }
   }
 
-  //Retrieve a user, with email and password
+  /// Retrieve a user, with email and password
   void optionForgotRetrieveUser() async {
     clear();
 
@@ -171,7 +170,7 @@ class UsersCLI {
     }
   }
 
-  //Update a user
+  /// Update a user
   void optionUpdateUser() async {
     clear();
     try {
@@ -192,7 +191,7 @@ class UsersCLI {
     }
   }
 
-  //Delete a user
+  /// Delete a user
   void optionDeleteUser() async {
     clear();
     try {
@@ -209,7 +208,7 @@ class UsersCLI {
     }
   }
 
-  //List a user
+  /// List a user
   void optionListUser() async {
     clear();
     try {

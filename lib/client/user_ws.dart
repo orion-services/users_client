@@ -1,5 +1,3 @@
-import 'dart:io';
-
 /// Copyright 2022 Orion Services @ https://github.com/orion-services
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -12,14 +10,14 @@ import 'dart:io';
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+import 'dart:io';
+import 'package:users_client/client/base_client.dart';
 import 'package:http/http.dart' as http;
-import 'package:orion_users_client/base_client.dart';
 
 String teste = 'teste';
 
 /// Web Service for User microservice
 class UsersWebService extends BaseClient {
-
   /// instantiate a UserWebService object.
   /// [bool enableSecurity] indicates is the client will work with http or https
   /// [String userToken] indicates the token (optional)
@@ -36,7 +34,7 @@ class UsersWebService extends BaseClient {
     return http.post(url, body: {'email': email, 'password': password});
   }
 
-  /// Web Service: Creates a user in the Orion User
+  /// Web Service: Creates a user in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
@@ -44,21 +42,21 @@ class UsersWebService extends BaseClient {
         .post(url, body: {'name': name, 'email': email, 'password': password});
   }
 
-  /// Web Service: Send a hash by email in the Orion User
+  /// Web Service: Send a hash by email in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> forgotUser(String email) {
     var url = wsURL + 'forgot';
     return http.post(url, body: {'email': email});
   }
 
-  /// Web Service: Retrieve a password in the Orion User
+  /// Web Service: Retrieve a password in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
     return http.post(url, body: {'hash': hash, 'password': password});
   }
 
-  /// Web Service: update a user in the Orion User
+  /// Web Service: update a user in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> updateUser(
       String id, String name, String email, String password, String jwt) {
@@ -68,7 +66,7 @@ class UsersWebService extends BaseClient {
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
-  /// Web Service: Delete a user in the Orion User
+  /// Web Service: Delete a user in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> deleteUser(String id, String jwt) {
     var url = wsURL + 'delete';
@@ -77,7 +75,7 @@ class UsersWebService extends BaseClient {
         body: {'id': id});
   }
 
-  /// Web Service: List a user in the Orion User
+  /// Web Service: List a user in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> listUser(String id, String jwt) {
     var url = wsURL + 'list' + '/' + id;

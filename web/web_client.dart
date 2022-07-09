@@ -13,8 +13,7 @@
 import 'dart:html';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:orion_users_client/web_service.dart';
-import 'package:orion_users_client/web_socket.dart';
+import 'package:users_client/client/user_ws.dart';
 
 /// main
 void main() {
@@ -24,20 +23,15 @@ void main() {
 /// Examples of how to use UsersWebService and UsersWebSocket clients in
 /// simple Web page
 class WebClientExample {
-
   /// Users Web Service client
-  UsersWebService _usersWS;
+  UsersWebService _ws;
 
-  /// Users Web Socket client
-  UsersWebSocket _usersSocket;
-
-   /// JSON Web Token;
+  /// JSON Web Token;
   String _jwt;
 
   WebClientExample() {
     // instantiating the users web service client
-    _usersWS = UsersWebService(getSecureValue(), getDevelopmentValue());
-    _usersSocket = UsersWebSocket(getSecureValue(), getDevelopmentValue());
+    _ws = UsersWebService(getSecureValue(), getDevelopmentValue());
 
     // adding buttons listeners
     // Web Service
@@ -53,12 +47,12 @@ class WebClientExample {
     querySelector('#btnChangeHost').onClick.listen(urlHandler);
   }
 
-    /// Handles the [MouseEvent event] of the login button
+  /// Handles the [MouseEvent event] of the login button
   void loginHandler(MouseEvent event) async {
     try {
       var user = (querySelector('#user') as InputElement).value;
       var password = (querySelector('#password') as InputElement).value;
-      var response = await _usersWS.login(user, password);
+      var response = await _ws.login(user, password);
       _jwt = response.body;
     } on Exception catch (e, stacktrace) {
       _jwt = stacktrace.toString();
@@ -74,18 +68,17 @@ class WebClientExample {
     var email = (querySelector('#emailCreate') as InputElement).value;
     var password = (querySelector('#passwordCreate') as InputElement).value;
 
-      String data;
-        try {
-          // create a user in users service
-          var response = await _usersWS.createUser(name, email, password);
-          data = json.decode(response.body)['name'+'email'+'password'];
-
-        } on Exception {
-          data = 'connection refused';
-        } finally {
-          // setting the return data to HTML screen
-          appendNode(data);
-        }
+    String data;
+    try {
+      // create a user in users service
+      var response = await _ws.createUser(name, email, password);
+      data = json.decode(response.body)['name' + 'email' + 'password'];
+    } on Exception {
+      data = 'connection refused';
+    } finally {
+      // setting the return data to HTML screen
+      appendNode(data);
+    }
   }
 
   void updateUserHandler(MouseEvent event) async {
@@ -95,66 +88,60 @@ class WebClientExample {
     var email = (querySelector('#emailUpdate') as InputElement).value;
     var password = (querySelector('#passwordUpdate') as InputElement).value;
 
-      String data;
-        try {
-          // create a user in users service
-          var response = await _usersWS.updateUser(id, name, email, password, _jwt);
-          data = json.decode(response.body)['id'+'name'+'email'+'password'];
-
-        } on Exception {
-          data = 'connection refused';
-        } finally {
-          // setting the return data to HTML screen
-          appendNode(data);
-        }
+    String data;
+    try {
+      // create a user in users service
+      var response = await _ws.updateUser(id, name, email, password, _jwt);
+      data = json.decode(response.body)['id' + 'name' + 'email' + 'password'];
+    } on Exception {
+      data = 'connection refused';
+    } finally {
+      // setting the return data to HTML screen
+      appendNode(data);
+    }
   }
 
-    void deleteUserHandler(MouseEvent event) async {
+  void deleteUserHandler(MouseEvent event) async {
     // getting the user data
     var id = (querySelector('#idDelete') as InputElement).value;
 
-      String data;
-        try {
-          // create a user in users service
-          var response = await _usersWS.deleteUser(id,_jwt);
-          data = json.decode(response.body)['id'];
-
-        } on Exception {
-          data = 'connection refused';
-        } finally {
-          // setting the return data to HTML screen
-          appendNode(data);
-        }
+    String data;
+    try {
+      // create a user in users service
+      var response = await _ws.deleteUser(id, _jwt);
+      data = json.decode(response.body)['id'];
+    } on Exception {
+      data = 'connection refused';
+    } finally {
+      // setting the return data to HTML screen
+      appendNode(data);
+    }
   }
 
-    void listUserHandler(MouseEvent event) async {
+  void listUserHandler(MouseEvent event) async {
     // getting the user data
     var id = (querySelector('#idList') as InputElement).value;
 
-      String data;
-        try {
-          // create a user in users service
-          var response = await _usersWS.listUser(id,_jwt);
-          data = json.decode(response.body)['id'];
-
-        } on Exception {
-          data = 'connection refused';
-        } finally {
-          // setting the return data to HTML screen
-          appendNode(data);
-        }
+    String data;
+    try {
+      // create a user in users service
+      var response = await _ws.listUser(id, _jwt);
+      data = json.decode(response.body)['id'];
+    } on Exception {
+      data = 'connection refused';
+    } finally {
+      // setting the return data to HTML screen
+      appendNode(data);
+    }
   }
 
   /// Handles the [MouseEvent] of the checkboxes
   void urlHandler(MouseEvent event) {
     // change the url of the service
-    _usersWS.changeServiceURL(getSecureValue(), getDevelopmentValue(),
-        getHostValue(), getPortValue());
-    _usersSocket.changeServiceURL(getSecureValue(), getDevelopmentValue(),
+    _ws.changeServiceURL(getSecureValue(), getDevelopmentValue(),
         getHostValue(), getPortValue());
 
-    appendNode(_usersWS.wsURL);
-    appendNode(_usersSocket.socketURL);
+    appendNode(_ws.wsURL);
   }
 
   /// [return] a boolean indicating a secure connection or not

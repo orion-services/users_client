@@ -10,13 +10,13 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+import 'package:http/http.dart';
 
-import 'package:users_client/cli/cli.dart';
+abstract class UserUCInterface {
+  /// Creates a user in the service with the arguments [name], [email] and
+  /// [password]
+  Future<Response> createUser(String name, String email, String password);
 
-void main(List<String> arguments) async {
-  var cli = UsersCLI();
-  var loop = true;
-  while (loop) {
-    loop = await cli.menu();
-  }
+  /// Authenticates an user in the service using [email] and [password]
+  Future<Response> login(String email, String password);
 }
