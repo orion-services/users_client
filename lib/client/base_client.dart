@@ -55,7 +55,7 @@ class BaseClient {
   }
 
   void _montURL() {
-    String urlBase = host + ':' + port;
+    var urlBase = host + ':' + port;
     wsURL = wsURL + urlBase + '/' + api + '/' + wsEndpoint + '/';
   }
 }

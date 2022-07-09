@@ -10,6 +10,8 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+
+// ignore_for_file: await_only_futures
 import 'dart:io';
 import 'package:users_client/client/user_ws.dart';
 import 'package:prompts/prompts.dart' as prompts;
@@ -26,9 +28,6 @@ class UsersCLI {
 
   // enables security https or wss
   bool _security;
-
-  // stores the token of a channel
-  String _token;
 
   // stores a response of a operation
   String _response;
@@ -49,20 +48,16 @@ class UsersCLI {
 
   String _id;
 
-  String _nullString;
-
   // stores the jwt
   String _jwt;
 
   UsersCLI() {
     _host = 'localhost';
     _port = '8080';
-    _token = '';
     _name = '';
     _email = '';
     _response = '';
     _id = '';
-    _nullString = 'response: {"id":0}';
 
     // Setting the secure to false and development to true
     _security = false;
@@ -112,7 +107,7 @@ class UsersCLI {
 
       var response = await _userUC.login(_email, _password);
       _jwt = response.body;
-      _response = '${_jwt}';
+      _response = '$_jwt';
     } on Exception {
       _response = 'Connection refused';
     }
