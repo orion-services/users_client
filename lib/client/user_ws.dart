@@ -31,29 +31,29 @@ class UsersWebService extends BaseClient {
   /// and returns [Future<http.Response>]
   Future<http.Response> login(String email, String password) {
     var url = wsURL + 'login';
-    return http.post(url, body: {'email': email, 'password': password});
+    return http.post(Uri.parse(url), body: {'email': email, 'password': password});
   }
 
   /// Web Service: Creates a user in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
-    var url = wsURL + 'create';
+    String url = wsURL + 'create';
     return http
-        .post(url, body: {'name': name, 'email': email, 'password': password});
+        .post(Uri.parse(url), body: {'name': name, 'email': email, 'password': password});
   }
 
   /// Web Service: Send a hash by email in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> forgotUser(String email) {
     var url = wsURL + 'forgot';
-    return http.post(url, body: {'email': email});
+    return http.post(Uri.parse(url), body: {'email': email});
   }
 
   /// Web Service: Retrieve a password in the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
-    return http.post(url, body: {'hash': hash, 'password': password});
+    return http.post(Uri.parse(url), body: {'hash': hash, 'password': password});
   }
 
   /// Web Service: update a user in the Orion Users
@@ -61,7 +61,7 @@ class UsersWebService extends BaseClient {
   Future<http.Response> updateUser(
       String id, String name, String email, String password, String jwt) {
     var url = wsURL + 'update';
-    return http.post(url,
+    return http.post(Uri.parse(url),
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
@@ -70,7 +70,7 @@ class UsersWebService extends BaseClient {
   /// and returns [Future<http.Response>]
   Future<http.Response> deleteUser(String id, String jwt) {
     var url = wsURL + 'delete';
-    return http.post(url,
+    return http.post(Uri.parse(url),
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'id': id});
   }
@@ -81,6 +81,6 @@ class UsersWebService extends BaseClient {
     var url = wsURL + 'list' + '/' + id;
     print(url);
     return http
-        .get(url, headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
+        .get(Uri.parse(url), headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
   }
 }
