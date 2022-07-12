@@ -14,32 +14,22 @@ import 'dart:io';
 import 'package:users_client/client/base_client.dart';
 import 'package:http/http.dart' as http;
 
-String teste = 'teste';
-
-/// Web Service for User microservice
+/// Abstracts the endpoints of the users service
 class UsersWebService extends BaseClient {
-  /// instantiate a UserWebService object.
-  /// [bool enableSecurity] indicates is the client will work with http or https
-  /// [String userToken] indicates the token (optional)
-  UsersWebService(bool enableSecurity, [String userToken])
-      : super(enableSecurity) {
-    // sets the token of a channel
-    token = userToken;
+  /// Web Service: Creates a user in the Orion Users
+  /// and returns [Future<http.Response>]
+  Future<http.Response> createUser(String name, String email, String password) {
+    var url = wsURL + 'create';
+    return http.post(Uri.parse(url),
+        body: {'name': name, 'email': email, 'password': password});
   }
 
   /// Web Service: Login the Orion Users
   /// and returns [Future<http.Response>]
   Future<http.Response> login(String email, String password) {
     var url = wsURL + 'login';
-    return http.post(Uri.parse(url), body: {'email': email, 'password': password});
-  }
-
-  /// Web Service: Creates a user in the Orion Users
-  /// and returns [Future<http.Response>]
-  Future<http.Response> createUser(String name, String email, String password) {
-    String url = wsURL + 'create';
     return http
-        .post(Uri.parse(url), body: {'name': name, 'email': email, 'password': password});
+        .post(Uri.parse(url), body: {'email': email, 'password': password});
   }
 
   /// Web Service: Send a hash by email in the Orion Users
@@ -53,7 +43,8 @@ class UsersWebService extends BaseClient {
   /// and returns [Future<http.Response>]
   Future<http.Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
-    return http.post(Uri.parse(url), body: {'hash': hash, 'password': password});
+    return http
+        .post(Uri.parse(url), body: {'hash': hash, 'password': password});
   }
 
   /// Web Service: update a user in the Orion Users
@@ -80,7 +71,7 @@ class UsersWebService extends BaseClient {
   Future<http.Response> listUser(String id, String jwt) {
     var url = wsURL + 'list' + '/' + id;
     print(url);
-    return http
-        .get(Uri.parse(url), headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
+    return http.get(Uri.parse(url),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
   }
 }
