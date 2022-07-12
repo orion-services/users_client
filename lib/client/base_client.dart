@@ -11,50 +11,55 @@
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
 class BaseClient {
+  // use https to make a request
+  late bool https;
 
   /// the host of the service
-  String host;
+  late String host;
 
   /// the port of the service
-  String port;
+  late String port;
 
-  String wsEndpoint;
+  late String wsEndpoint;
 
   /// the api version
-  String api;
+  late String api;
 
-  /// the result url for the Web Service
-  String wsURL;
+  /// the result url
+  late String wsURL;
 
-  /// the token of the user
-  String token;
-
-  /// [bool enableHTTPS] indicates if will be used a secure protocol
-  BaseClient(bool enableHTTPS) {
-    host = 'localhost';
-    port = '8080';
+  /// [bool https] indicates if the client will make requests over http or https
+  /// [String host] the host of the service
+  /// [String port] the port used by the service
+  BaseClient(
+      [this.https = false, this.host = 'localhost', this.port = '8080']) {
     wsEndpoint = 'user';
     api = 'api';
-    changeServiceURL(enableHTTPS, host, port);
+    changeServiceConnection(https, host, port);
   }
 
-  void changeServiceURL(
-      bool enableHTTPS, String newHost, String newPort) {
-    host = newHost;
-    port = newPort;
-    _enableSecurityProtocol(enableHTTPS);
-    _montURL();
+  /// Method used to change parameters to connect in users service
+  /// [bool https] indicates if the client will use http or https
+  /// [String host] the host of the service
+  /// [String port] the port used by the service
+  void changeServiceConnection(bool https, String host, String port) {
+    this.host = host;
+    this.port = port;
+    _handleHTTP(https);
+    _createURL();
   }
 
-  void _enableSecurityProtocol(bool enableHTTPS) {
-    if (enableHTTPS) {
+  /// [bool https] indicates if the client will use http or https
+  void _handleHTTP(bool https) {
+    if (https) {
       wsURL = 'https://';
     } else {
       wsURL = 'http://';
     }
   }
 
-  void _montURL() {
+  /// Creates the final URL to connect make requests in the user services
+  void _createURL() {
     var urlBase = host + ':' + port;
     wsURL = wsURL + urlBase + '/' + api + '/' + wsEndpoint + '/';
   }

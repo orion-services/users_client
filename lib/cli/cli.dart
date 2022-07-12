@@ -13,6 +13,7 @@
 
 // ignore_for_file: await_only_futures
 import 'dart:io';
+import 'package:http/http.dart';
 import 'package:users_client/client/user_ws.dart';
 import 'package:prompts/prompts.dart' as prompts;
 import 'package:users_client/uc/user_uc_interface.dart';
@@ -21,47 +22,39 @@ import 'package:users_client/uc/user_uc.dart';
 /// CLI client for Orion User micro service
 class UsersCLI {
   // stores the host of user service
-  String _host;
+  String _host = 'localhost';
 
   // stores the port
-  String _port;
+  String _port = '8080';
 
-  // enables security https or wss
-  bool _security;
+  // enables security https
+  bool _security = false;
 
   // stores a response of a operation
-  String _response;
+  String _response = '';
+
+  String _name = '';
+
+  String _email = '';
+
+  String _password = '';
+
+  String _hash = '';
+
+  String _id = '';
 
   // the User Web Service client
-  UsersWebService _usersWebService;
+  late UsersWebService _usersWebService;
 
   // Use cases
-  UserUCInterface _userUC;
-
-  String _name;
-
-  String _email;
-
-  String _password;
-
-  String _hash;
-
-  String _id;
+  late UserUCInterface _userUC;
 
   // stores the jwt
-  String _jwt;
+  late String _jwt;
 
   UsersCLI() {
-    _host = 'localhost';
-    _port = '8080';
-    _name = '';
-    _email = '';
-    _response = '';
-    _id = '';
-
-    // Setting the secure to false and development to true
-    _security = false;
-    _userUC = UserUC(_security);
+    _usersWebService = UsersWebService();
+    _userUC = UserUC();
   }
 
   // Prints the menu
@@ -84,37 +77,27 @@ class UsersCLI {
     // prints the menu
     print(cli);
 
-    // executing actions according the options
-    if (cli == options[0]) {
-      await optionCreateUser();
-    } else if (cli == options[1]) {
-      await optionLogin();
-    } else if (cli == options[2]) {
-      await optionConfigure();
-    } else if (cli == options[3]) {
-      loop = false;
-      clear();
+    try {
+      // executing actions according the options
+      if (cli == options[0]) {
+        await optionCreateUser();
+      } else if (cli == options[1]) {
+        await optionLogin();
+      } else if (cli == options[2]) {
+        optionConfigure();
+      } else if (cli == options[3]) {
+        loop = false;
+        clear();
+      }
+    } catch (e) {
+      print(e);
     }
+
     return Future.value(loop);
   }
 
-  /// Executes the menu option to create a new channel
-  void optionLogin() async {
-    try {
-      clear();
-      askEmail();
-      askPassword();
-
-      var response = await _userUC.login(_email, _password);
-      _jwt = response.body;
-      _response = '$_jwt';
-    } on Exception {
-      _response = 'Connection refused';
-    }
-  }
-
-  /// Create an user
-  void optionCreateUser() async {
+  /// Create a user
+  Future<Response> optionCreateUser() async {
     clear();
     try {
       askName();
@@ -128,8 +111,27 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+      return response;
+    } catch (e) {
+      _response = e.toString();
+      throw ('createUser');
+    }
+  }
+
+  /// Executes the menu option to create a new channel
+  Future<Response> optionLogin() async {
+    try {
+      clear();
+      askEmail();
+      askPassword();
+
+      var response = await _userUC.login(_email, _password);
+      _jwt = response.body;
+      _response = '$_jwt';
+      return response;
+    } catch (e) {
+      _response = e.toString();
+      throw ('login');
     }
   }
 
@@ -146,8 +148,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('forgotUser');
     }
 
     try {
@@ -160,8 +163,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('retrieveUser');
     }
   }
 
@@ -181,8 +185,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('updateUser');
     }
   }
 
@@ -198,8 +203,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('deleteUser');
     }
   }
 
@@ -215,8 +221,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('listUser');
     }
   }
 
@@ -226,7 +233,7 @@ class UsersCLI {
     askPort();
     askSecurity();
 
-    _usersWebService.changeServiceURL(_security, _host, _port);
+    _usersWebService.changeServiceConnection(_security, _host, _port);
 
     _response = 'Service URL: ' + _usersWebService.wsURL;
   }

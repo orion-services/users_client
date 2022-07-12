@@ -16,13 +16,13 @@ import 'package:users_client/client/user_ws.dart';
 import 'package:users_client/uc/user_uc_interface.dart';
 
 class UserUC implements UserUCInterface {
-  UsersWebService _service;
+  late UsersWebService _service;
 
-  UserUC(bool secure) {
-    _service = UsersWebService(false);
+  UserUC() {
+    _service = UsersWebService();
   }
 
-  /// Creates a user in the service with the arguments [name], [emai] and
+  /// Creates a user in the service with the arguments [name], [email] and
   /// [password]
   @override
   Future<Response> createUser(String name, String email, String password) {
@@ -50,5 +50,12 @@ class UserUC implements UserUCInterface {
     } else {
       return _service.login(email, password);
     }
+  }
+
+  /// [bool https] indicates if the client will use http or https
+  /// [String host] the host of the service
+  /// [String port] the port used by the service
+  void changeServiceConnection(bool https, String host, String port) {
+    _service.changeServiceConnection(https, host, port);
   }
 }
