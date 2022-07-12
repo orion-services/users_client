@@ -114,7 +114,7 @@ class UsersCLI {
       return response;
     } catch (e) {
       _response = e.toString();
-      throw (Exception('createUser'));
+      throw ('createUser');
     }
   }
 
@@ -129,9 +129,9 @@ class UsersCLI {
       _jwt = response.body;
       _response = '$_jwt';
       return response;
-    } on Exception {
-      _response = 'Connection refused';
-      throw (Exception('login'));
+    } catch (e) {
+      _response = e.toString();
+      throw ('login');
     }
   }
 
@@ -148,8 +148,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('forgotUser');
     }
 
     try {
@@ -162,8 +163,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('retrieveUser');
     }
   }
 
@@ -183,8 +185,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('updateUser');
     }
   }
 
@@ -200,8 +203,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('deleteUser');
     }
   }
 
@@ -217,8 +221,9 @@ class UsersCLI {
       } else {
         _response = 'response: ${response.body}';
       }
-    } on Exception {
-      _response = 'error';
+    } catch (e) {
+      _response = e.toString();
+      throw ('listUser');
     }
   }
 

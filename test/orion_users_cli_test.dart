@@ -25,29 +25,29 @@ import 'orion_users_cli_test.mocks.dart';
 @GenerateMocks([UsersWebService])
 void main() {
   test('Create an user with small password', () {
-    UserUCInterface uc = UserUC(false);
+    UserUCInterface uc = UserUC();
     expect(() => uc.createUser('Orion', 'orion@test.com', '12345678'),
         throwsException);
   });
 
   test('Create user with a blank name', () {
-    UserUCInterface uc = UserUC(false);
+    UserUCInterface uc = UserUC();
     expect(
         () => uc.createUser('', 'orion@test.com', '12345678'), throwsException);
   });
 
   test('Create user with a blank e-mail', () {
-    UserUCInterface uc = UserUC(false);
+    UserUCInterface uc = UserUC();
     expect(() => uc.createUser('Orion', '', '12345678'), throwsException);
   });
 
   test('Create user with a blank password', () {
-    UserUCInterface uc = UserUC(false);
+    UserUCInterface uc = UserUC();
     expect(() => uc.createUser('Orion', 'orion@test.com', ''), throwsException);
   });
 
   test('Create user with an e-mail invalid', () {
-    UserUCInterface uc = UserUC(false);
+    UserUCInterface uc = UserUC();
     expect(() => uc.createUser('Orion', 'orion#test.com', '12345678'),
         throwsException);
   });
@@ -57,9 +57,8 @@ void main() {
     when(ws.createUser('Orion', 'orion@test.com', '12345678'))
         .thenAnswer((_) => Future<Response>.value(Response('body', 200)));
 
-    UserUCInterface uc = UserUC(false);
+    UserUCInterface uc = UserUC();
     var response = uc.createUser('Orion', 'orion@test.com', '12345678');
-
     response.then((value) => {expect(200, value.statusCode)});
   });
 }
