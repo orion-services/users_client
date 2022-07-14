@@ -78,8 +78,8 @@ class MockUsersWebService extends _i1.Mock implements _i3.UsersWebService {
               returnValue: Future<_i2.Response>.value(_FakeResponse_0()))
           as _i4.Future<_i2.Response>);
   @override
-  _i4.Future<_i2.Response> login(String? email, String? password) =>
-      (super.noSuchMethod(Invocation.method(#login, [email, password]),
+  _i4.Future<_i2.Response> authenticate(String? email, String? password) =>
+      (super.noSuchMethod(Invocation.method(#authenticate, [email, password]),
               returnValue: Future<_i2.Response>.value(_FakeResponse_0()))
           as _i4.Future<_i2.Response>);
   @override

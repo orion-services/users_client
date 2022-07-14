@@ -1,6 +1,6 @@
 name: users_client
 description: Orion Users Client. This a dart abstraction to Orion Users service
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/orion-services/users_client
 
 environment:

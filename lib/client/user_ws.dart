@@ -16,39 +16,45 @@ import 'package:http/http.dart' as http;
 
 /// Abstracts the endpoints of the users service
 class UsersWebService extends BaseClient {
-  /// Web Service: Creates a user in the Orion Users
-  /// and returns [Future<http.Response>]
+  /// Creates a user in the users services and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
     return http.post(Uri.parse(url),
         body: {'name': name, 'email': email, 'password': password});
   }
 
-  /// Web Service: Login the Orion Users
-  /// and returns [Future<http.Response>]
-  Future<http.Response> login(String email, String password) {
-    var url = wsURL + 'login';
+  /// Creates and authenticates a user in the users services and returns
+  /// [Future<http.Response>]
+  Future<http.Response> createAuthenticate(
+      String name, String email, String password) {
+    var url = wsURL + 'createAuthenticate';
+    return http.post(Uri.parse(url),
+        body: {'name': name, 'email': email, 'password': password});
+  }
+
+  /// Authenticates the users services and returns [Future<http.Response>]
+  Future<http.Response> authenticate(String email, String password) {
+    var url = wsURL + 'authenticate';
     return http
         .post(Uri.parse(url), body: {'email': email, 'password': password});
   }
 
-  /// Web Service: Send a hash by email in the Orion Users
-  /// and returns [Future<http.Response>]
+  /// Send a hash by email in the users services and returns
+  /// [Future<http.Response>]
   Future<http.Response> forgotUser(String email) {
     var url = wsURL + 'forgot';
     return http.post(Uri.parse(url), body: {'email': email});
   }
 
-  /// Web Service: Retrieve a password in the Orion Users
-  /// and returns [Future<http.Response>]
+  /// Retrieve a password in the users services and returns
+  /// [Future<http.Response>]
   Future<http.Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
     return http
         .post(Uri.parse(url), body: {'hash': hash, 'password': password});
   }
 
-  /// Web Service: update a user in the Orion Users
-  /// and returns [Future<http.Response>]
+  /// updates a user in the users services and returns [Future<http.Response>]
   Future<http.Response> updateUser(
       String id, String name, String email, String password, String jwt) {
     var url = wsURL + 'update';
@@ -57,8 +63,7 @@ class UsersWebService extends BaseClient {
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
-  /// Web Service: Delete a user in the Orion Users
-  /// and returns [Future<http.Response>]
+  /// Deletes a user in the users services and returns [Future<http.Response>]
   Future<http.Response> deleteUser(String id, String jwt) {
     var url = wsURL + 'delete';
     return http.post(Uri.parse(url),
@@ -66,8 +71,7 @@ class UsersWebService extends BaseClient {
         body: {'id': id});
   }
 
-  /// Web Service: List a user in the Orion Users
-  /// and returns [Future<http.Response>]
+  /// Lists a user in the users services and returns [Future<http.Response>]
   Future<http.Response> listUser(String id, String jwt) {
     var url = wsURL + 'list' + '/' + id;
     print(url);

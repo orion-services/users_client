@@ -43,12 +43,12 @@ class UserUC implements UserUCInterface {
 
   /// Authenticates an user in the service using [email] and [password]
   @override
-  Future<Response> login(String email, String password) {
+  Future<Response> authenticate(String email, String password) {
     if (email.isEmpty || password.isEmpty || !EmailValidator.validate(email)) {
       throw Exception(
           'The arguments must be not empty and the e-mail must be valid');
     } else {
-      return _service.login(email, password);
+      return _service.authenticate(email, password);
     }
   }
 
@@ -57,5 +57,23 @@ class UserUC implements UserUCInterface {
   /// [String port] the port used by the service
   void changeServiceConnection(bool https, String host, String port) {
     _service.changeServiceConnection(https, host, port);
+  }
+
+  @override
+  Future<Response> createAuthenticate(
+      String name, String email, String password) {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        !EmailValidator.validate(email)) {
+      throw Exception(
+          'The arguments must be not empty and the e-mail must be valid');
+    } else {
+      if (password.length < 8) {
+        throw Exception('The password must have at least eight characters');
+      } else {
+        return _service.createAuthenticate(name, email, password);
+      }
+    }
   }
 }

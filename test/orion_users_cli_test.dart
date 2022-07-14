@@ -61,4 +61,14 @@ void main() {
     var response = uc.createUser('Orion', 'orion@test.com', '12345678');
     response.then((value) => {expect(200, value.statusCode)});
   });
+
+  test('Create and authenticates a user', () {
+    var ws = MockUsersWebService();
+    when(ws.createUser('Orion', 'orion@test.com', '12345678'))
+        .thenAnswer((_) => Future<Response>.value(Response('body', 200)));
+
+    UserUCInterface uc = UserUC();
+    var response = uc.createAuthenticate('Orion', 'orion@test.com', '12345678');
+    response.then((value) => {expect(200, value.statusCode)});
+  });
 }

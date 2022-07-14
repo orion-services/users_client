@@ -69,7 +69,13 @@ class UsersCLI {
     var loop = true;
 
     // the main menu options
-    var options = ['Create user', 'Login', 'Configurations', 'Exit'];
+    var options = [
+      'Create user',
+      'Authenticate',
+      'Create and Authenticate',
+      'Configurations',
+      'Exit'
+    ];
 
     // configure the options
     var cli = prompts.choose('Options', options, defaultsTo: options[0]);
@@ -82,10 +88,12 @@ class UsersCLI {
       if (cli == options[0]) {
         await optionCreateUser();
       } else if (cli == options[1]) {
-        await optionLogin();
+        await optionAuthenticate();
       } else if (cli == options[2]) {
-        optionConfigure();
+        await optionCreateAuthenticate();
       } else if (cli == options[3]) {
+        optionConfigure();
+      } else if (cli == options[4]) {
         loop = false;
         clear();
       }
@@ -119,19 +127,41 @@ class UsersCLI {
   }
 
   /// Executes the menu option to create a new channel
-  Future<Response> optionLogin() async {
+  Future<Response> optionAuthenticate() async {
     try {
       clear();
       askEmail();
       askPassword();
 
-      var response = await _userUC.login(_email, _password);
+      var response = await _userUC.authenticate(_email, _password);
       _jwt = response.body;
       _response = '$_jwt';
       return response;
     } catch (e) {
       _response = e.toString();
-      throw ('login');
+      throw ('authenticate');
+    }
+  }
+
+  /// Creates and authenticates a user
+  Future<Response> optionCreateAuthenticate() async {
+    clear();
+    try {
+      askName();
+      askEmail();
+      askPassword();
+
+      var response = await _userUC.createAuthenticate(_name, _email, _password);
+
+      if (response.statusCode == 400) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+      return response;
+    } catch (e) {
+      _response = e.toString();
+      throw ('createUser');
     }
   }
 
