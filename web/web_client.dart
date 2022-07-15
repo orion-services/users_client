@@ -47,12 +47,12 @@
 //     querySelector('#btnChangeHost').onClick.listen(urlHandler);
 //   }
 
-//   /// Handles the [MouseEvent event] of the login button
-//   void loginHandler(MouseEvent event) async {
+//   /// Handles the [MouseEvent event] of the authenticate button
+//   void authenticateHandler(MouseEvent event) async {
 //     try {
 //       var user = (querySelector('#user') as InputElement).value;
 //       var password = (querySelector('#password') as InputElement).value;
-//       var response = await _ws.login(user, password);
+//       var response = await _ws.authenticate(user, password);
 //       _jwt = response.body;
 //     } on Exception catch (e, stacktrace) {
 //       _jwt = stacktrace.toString();

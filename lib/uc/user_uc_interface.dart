@@ -17,6 +17,11 @@ abstract class UserUCInterface {
   /// [password]
   Future<Response> createUser(String name, String email, String password);
 
+  /// Creates and authenticates a user in the service with the arguments [name], [email] and
+  /// [password]
+  Future<Response> createAuthenticate(
+      String name, String email, String password);
+
   /// Authenticates an user in the service using [email] and [password]
-  Future<Response> login(String email, String password);
+  Future<Response> authenticate(String email, String password);
 }
