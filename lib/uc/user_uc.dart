@@ -55,6 +55,7 @@ class UserUC implements UserUCInterface {
   /// [bool https] indicates if the client will use http or https
   /// [String host] the host of the service
   /// [String port] the port used by the service
+  @override
   void changeServiceConnection(bool https, String host, String port) {
     _service.changeServiceConnection(https, host, port);
   }
