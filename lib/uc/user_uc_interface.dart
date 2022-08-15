@@ -24,4 +24,6 @@ abstract class UserUCInterface {
 
   /// Authenticates an user in the service using [email] and [password]
   Future<Response> authenticate(String email, String password);
+
+  void changeServiceConnection(bool https, String host, String port);
 }
