@@ -77,4 +77,20 @@ class UserUC implements UserUCInterface {
       }
     }
   }
+
+  @override
+  Future<Response> updatePassword(
+      String email, String password, String newPassword) {
+    if (email.isEmpty || password.isEmpty || newPassword.isEmpty) {
+      throw Exception('The arguments must be not empty');
+    }
+    if (!EmailValidator.validate(email)) {
+      throw Exception('E-mail must be valid');
+    }
+    if (password.length < 8) {
+      throw Exception('The password must have at least eight characters');
+    } else {
+      return _service.updatePassword(email, password, newPassword);
+    }
+  }
 }
