@@ -31,4 +31,7 @@ abstract class UserUCInterface {
   /// [newPassword]
   Future<Response> updatePassword(
       String email, String password, String newPassword);
+
+  /// Send a new password to the [email]
+  Future<Response> recoverPassword(String email);
 }

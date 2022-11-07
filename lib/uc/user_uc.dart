@@ -93,4 +93,15 @@ class UserUC implements UserUCInterface {
       return _service.updatePassword(email, password, newPassword);
     }
   }
+
+  @override
+  Future<Response> recoverPassword(String email) {
+    if (email.isEmpty) {
+      throw Exception('The E-mail must not be empty');
+    }
+    if (!EmailValidator.validate(email)) {
+      throw Exception('E-mail must be valid');
+    }
+    return _service.recoverPassword(email);
+  }
 }

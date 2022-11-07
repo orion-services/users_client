@@ -89,4 +89,11 @@ class UsersWebService extends BaseClient {
       'newPassword': newPassword
     });
   }
+
+  Future<http.Response> recoverPassword(String email) {
+    var url = wsURL + 'recoverPassword';
+    return http.post(Uri.parse(url), body: {
+      'email': email,
+    });
+  }
 }
