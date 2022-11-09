@@ -73,6 +73,7 @@ class UsersCLI {
       'Create user',
       'Authenticate',
       'Create and Authenticate',
+      'Recover Password',
       'Configurations',
       'Exit'
     ];
@@ -84,6 +85,7 @@ class UsersCLI {
     print(cli);
 
     try {
+      Response r;
       // executing actions according the options
       if (cli == options[0]) {
         await optionCreateUser();
@@ -92,8 +94,12 @@ class UsersCLI {
       } else if (cli == options[2]) {
         await optionCreateAuthenticate();
       } else if (cli == options[3]) {
-        optionConfigure();
+        r = await recoverPassword();
+        print(r.statusCode);
+        _email = prompts.get('E-mail: ', defaultsTo: _email);
       } else if (cli == options[4]) {
+        optionConfigure();
+      } else if (cli == options[5]) {
         loop = false;
         clear();
       }
@@ -254,6 +260,25 @@ class UsersCLI {
     } catch (e) {
       _response = e.toString();
       throw ('listUser');
+    }
+  }
+
+  Future<Response> recoverPassword() async {
+    clear();
+    try {
+      askEmail();
+
+      var response = await _userUC.recoverPassword(_email);
+
+      if (response.statusCode == 400) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+      return response;
+    } catch (e) {
+      _response = e.toString();
+      throw ('recoverPassword');
     }
   }
 

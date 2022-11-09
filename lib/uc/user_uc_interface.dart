@@ -26,4 +26,12 @@ abstract class UserUCInterface {
   Future<Response> authenticate(String email, String password);
 
   void changeServiceConnection(bool https, String host, String port);
+
+  /// Change an user password in the service using [email], [password] and
+  /// [newPassword]
+  Future<Response> updatePassword(
+      String email, String password, String newPassword);
+
+  /// Send a new password to the [email]
+  Future<Response> recoverPassword(String email);
 }
