@@ -63,12 +63,17 @@ class UsersWebService extends BaseClient {
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
+  /// updates the email from a user in the users services and returns [Future<http.Response>]
+  Future<http.Response> updateEmail(String email, String newEmail) {
+    var url = wsURL + 'update';
+    return http
+        .put(Uri.parse(url), body: {'email': email, 'newEmail': newEmail});
+  }
+
   /// Deletes a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> deleteUser(String id, String jwt) {
+  Future<http.Response> deleteUser(String email) {
     var url = wsURL + 'delete';
-    return http.post(Uri.parse(url),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
-        body: {'id': id});
+    return http.delete(Uri.parse(url), body: {'email': email});
   }
 
   /// Lists a user in the users services and returns [Future<http.Response>]

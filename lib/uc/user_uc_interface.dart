@@ -34,4 +34,10 @@ abstract class UserUCInterface {
 
   /// Send a new password to the [email]
   Future<Response> recoverPassword(String email);
+
+  /// Deletes the user that uses the [email]
+  Future<Response> deleteUser(String email);
+
+  /// update the user [email] to [newEmail]
+  Future<Response> updateEmail(String email, String newEmail);
 }

@@ -104,4 +104,26 @@ class UserUC implements UserUCInterface {
     }
     return _service.recoverPassword(email);
   }
+
+  @override
+  Future<Response> deleteUser(String email) {
+    if (email.isEmpty) {
+      throw Exception('The E-mail must not be empty');
+    }
+    if (!EmailValidator.validate(email)) {
+      throw Exception('E-mail must be valid');
+    }
+    return _service.deleteUser(email);
+  }
+
+  @override
+  Future<Response> updateEmail(String email, String newEmail) {
+    if (email.isEmpty || newEmail.isEmpty) {
+      throw Exception('The E-mail must not be empty');
+    }
+    if (!EmailValidator.validate(email) || !EmailValidator.validate(newEmail)) {
+      throw Exception('E-mail must be valid');
+    }
+    return _service.updateEmail(email, newEmail);
+  }
 }

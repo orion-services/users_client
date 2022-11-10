@@ -17,3 +17,7 @@
 ## 0.1.4
 
 - Update and Recover password feature
+
+## 0.1.5
+
+- Delete user and Update E-mail feature
