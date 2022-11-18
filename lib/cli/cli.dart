@@ -234,8 +234,9 @@ class UsersCLI {
   void optionDeleteUser() async {
     clear();
     try {
-      askId();
-      var response = await _usersWebService.deleteUser(_id);
+    
+      askEmail();
+      var response = await _usersWebService.deleteUser(_email);
 
       if (response.statusCode == 409) {
         _response = 'response: ${response.statusCode}';
