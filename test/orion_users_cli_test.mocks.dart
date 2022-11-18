@@ -122,11 +122,11 @@ class MockUsersWebService extends _i1.Mock implements _i3.UsersWebService {
                       #updateUser, [id, name, email, password, jwt]))))
           as _i4.Future<_i2.Response>);
   @override
-  _i4.Future<_i2.Response> deleteUser(String? id, String? jwt) =>
-      (super.noSuchMethod(Invocation.method(#deleteUser, [id, jwt]),
-              returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
-                  this, Invocation.method(#deleteUser, [id, jwt]))))
-          as _i4.Future<_i2.Response>);
+  _i4.Future<_i2.Response> deleteUser(String? email) => (super.noSuchMethod(
+          Invocation.method(#deleteUser, [email]),
+          returnValue: _i4.Future<_i2.Response>.value(
+              _FakeResponse_0(this, Invocation.method(#deleteUser, [email]))))
+      as _i4.Future<_i2.Response>);
   @override
   _i4.Future<_i2.Response> listUser(String? id, String? jwt) =>
       (super.noSuchMethod(Invocation.method(#listUser, [id, jwt]),
