@@ -26,7 +26,7 @@ import 'orion_users_cli_test.mocks.dart';
 void main() {
   test('Create an user with small password', () {
     UserUCInterface uc = UserUC();
-    expect(() => uc.createUser('Orion', 'orion@test.com', '12345678'),
+    expect(() => uc.createUser('Orion', 'orion@test.com', '1234567'),
         throwsException);
   });
 
