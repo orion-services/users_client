@@ -21,3 +21,7 @@
 ## 0.1.5
 
 - Delete user and Update E-mail feature
+
+## 0.1.6
+
+- Update Email bug fix

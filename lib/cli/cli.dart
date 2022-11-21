@@ -74,7 +74,9 @@ class UsersCLI {
       'Authenticate',
       'Create and Authenticate',
       'Recover Password',
-      'Configurations',
+      'Update Email',
+      'Update Password',
+      'Configure',
       'Exit'
     ];
 
@@ -85,7 +87,6 @@ class UsersCLI {
     print(cli);
 
     try {
-      Response r;
       // executing actions according the options
       if (cli == options[0]) {
         await optionCreateUser();
@@ -94,12 +95,14 @@ class UsersCLI {
       } else if (cli == options[2]) {
         await optionCreateAuthenticate();
       } else if (cli == options[3]) {
-        r = await recoverPassword();
-        print(r.statusCode);
-        _email = prompts.get('E-mail: ', defaultsTo: _email);
+        await optionRecoverPassword();
       } else if (cli == options[4]) {
-        optionConfigure();
+        await optionUpdateEmail();
       } else if (cli == options[5]) {
+        await optionUpdatePassword();
+      } else if (cli == options[6]) {
+        optionConfigure();
+      } else if (cli == options[7]) {
         loop = false;
         clear();
       }
@@ -231,6 +234,7 @@ class UsersCLI {
   void optionDeleteUser() async {
     clear();
     try {
+    
       askEmail();
       var response = await _usersWebService.deleteUser(_email);
 
@@ -263,12 +267,57 @@ class UsersCLI {
     }
   }
 
-  Future<Response> recoverPassword() async {
+  /// Send a email to your email address containing the new password
+  Future<Response> optionRecoverPassword() async {
     clear();
     try {
       askEmail();
 
       var response = await _userUC.recoverPassword(_email);
+
+      if (response.statusCode == 400) {
+        _response = 'response: ${response.statusCode}';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+      return response;
+    } catch (e) {
+      _response = e.toString();
+      throw ('recoverPassword');
+    }
+  }
+
+  /// Changes the email of a user
+  Future<Response> optionUpdateEmail() async {
+    clear();
+    try {
+      askEmail();
+      var newEmail = prompts.get('new E-mail: ', defaultsTo: '');
+
+      var response = await _userUC.updateEmail(_email, newEmail);
+      if (response.statusCode == 400) {
+        _response = 'response: ${response.statusCode}';
+        return response;
+      } else {
+        _response = 'response: ${response.body}';
+        return response;
+      }
+    } catch (e) {
+      _response = e.toString();
+      throw ('updateEmail');
+    }
+  }
+
+  /// Update the password of a user
+  Future<Response> optionUpdatePassword() async {
+    clear();
+    try {
+      askEmail();
+      var password = prompts.get('old password: ', defaultsTo: '');
+      var newPassword = prompts.get('new password: ', defaultsTo: '');
+
+      var response =
+          await _userUC.updatePassword(_email, password, newPassword);
 
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
