@@ -234,7 +234,6 @@ class UsersCLI {
   void optionDeleteUser() async {
     clear();
     try {
-    
       askEmail();
       var response = await _usersWebService.deleteUser(_email);
 

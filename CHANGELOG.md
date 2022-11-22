@@ -25,3 +25,7 @@
 ## 0.1.6
 
 - Update Email bug fix
+
+## 0.1.7
+
+- Endpoint path change
