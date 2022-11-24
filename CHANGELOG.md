@@ -29,3 +29,9 @@
 ## 0.1.7
 
 - Endpoint path change
+
+## 0.1.8
+
+- Removed the Web App of the package
+- Added the package version in the CLI menu
+- Some improvements in CLI messages

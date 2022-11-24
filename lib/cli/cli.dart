@@ -13,6 +13,8 @@
 
 // ignore_for_file: await_only_futures
 import 'dart:io';
+import 'dart:convert';
+import 'package:yaml/yaml.dart';
 import 'package:http/http.dart';
 import 'package:users_client/client/user_ws.dart';
 import 'package:prompts/prompts.dart' as prompts;
@@ -80,10 +82,12 @@ class UsersCLI {
       'Exit'
     ];
 
-    // configure the options
-    var cli = prompts.choose('Options', options, defaultsTo: options[0]);
+    // configuring the options
+    var version = await readVersion();
+    var menuOptions = 'Options - ' + version;
+    var cli = prompts.choose(menuOptions, options, defaultsTo: options[0]);
 
-    // prints the menu
+    // printing the menu
     print(cli);
 
     try {
@@ -338,7 +342,7 @@ class UsersCLI {
 
     _usersWebService.changeServiceConnection(_security, _host, _port);
 
-    _response = 'Service URL: ' + _usersWebService.wsURL;
+    _response = 'Users endpoint: ' + _usersWebService.wsURL;
   }
 
   /// clear the console
@@ -388,5 +392,16 @@ class UsersCLI {
   /// ask about the ID's name
   void askId() {
     _id = prompts.get('ID: ', defaultsTo: _id);
+  }
+
+  Future<String> readVersion() async {
+    try {
+      final file = await File('pubspec.yaml');
+      final contents = await file.readAsString();
+      Map yaml = loadYaml(contents);
+      return yaml['version'];
+    } catch (e) {
+      return 'Error to read the pubspec file';
+    }
   }
 }
