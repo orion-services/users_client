@@ -13,7 +13,6 @@
 
 // ignore_for_file: await_only_futures
 import 'dart:io';
-import 'dart:convert';
 import 'package:yaml/yaml.dart';
 import 'package:http/http.dart';
 import 'package:users_client/client/user_ws.dart';
@@ -294,14 +293,17 @@ class UsersCLI {
   Future<Response> optionUpdateEmail() async {
     clear();
     try {
+      askJWT();
       askEmail();
-      var newEmail = prompts.get('new E-mail: ', defaultsTo: '');
+      var newEmail = prompts.get('New e-mail: ', defaultsTo: '');
 
-      var response = await _userUC.updateEmail(_email, newEmail);
+      var response = await _userUC.updateEmail(_email, newEmail, _jwt);
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
         return response;
       } else {
+        _email = newEmail;
+        _jwt = response.body;
         _response = 'response: ${response.body}';
         return response;
       }
@@ -373,6 +375,11 @@ class UsersCLI {
   /// ask about the user's e-mail
   void askEmail() {
     _email = prompts.get('E-mail: ', defaultsTo: _email);
+  }
+
+  /// ask about jwt
+  void askJWT() {
+    _jwt = prompts.get('JWT: ', defaultsTo: _jwt);
   }
 
   void askHash() {

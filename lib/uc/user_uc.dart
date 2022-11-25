@@ -117,13 +117,13 @@ class UserUC implements UserUCInterface {
   }
 
   @override
-  Future<Response> updateEmail(String email, String newEmail) {
-    if (email.isEmpty || newEmail.isEmpty) {
-      throw Exception('The E-mail must not be empty');
+  Future<Response> updateEmail(String email, String newEmail, String jwt) {
+    if (email.isEmpty || newEmail.isEmpty || jwt.isEmpty) {
+      throw Exception('All data must be provided');
     }
     if (!EmailValidator.validate(email) || !EmailValidator.validate(newEmail)) {
       throw Exception('E-mail must be valid');
     }
-    return _service.updateEmail(email, newEmail);
+    return _service.updateEmail(email, newEmail, jwt);
   }
 }

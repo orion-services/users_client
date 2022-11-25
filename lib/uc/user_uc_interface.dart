@@ -39,5 +39,5 @@ abstract class UserUCInterface {
   Future<Response> deleteUser(String email);
 
   /// update the user [email] to [newEmail]
-  Future<Response> updateEmail(String email, String newEmail);
+  Future<Response> updateEmail(String email, String newEmail, String jwt);
 }
