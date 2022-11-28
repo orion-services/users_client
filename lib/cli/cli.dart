@@ -75,7 +75,7 @@ class UsersCLI {
       'Authenticate',
       'Create and Authenticate',
       'Recover Password',
-      'Update Email',
+      'Update E-mail',
       'Update Password',
       'Configure',
       'Exit'
@@ -119,6 +119,7 @@ class UsersCLI {
   /// Create a user
   Future<Response> optionCreateUser() async {
     clear();
+    print('Create User:');
     try {
       askName();
       askEmail();
@@ -140,8 +141,9 @@ class UsersCLI {
 
   /// Executes the menu option to create a new channel
   Future<Response> optionAuthenticate() async {
+    clear();
+    print('Authenticate:');
     try {
-      clear();
       askEmail();
       askPassword();
 
@@ -158,6 +160,7 @@ class UsersCLI {
   /// Creates and authenticates a user
   Future<Response> optionCreateAuthenticate() async {
     clear();
+    print('Create and Authenticate:');
     try {
       askName();
       askEmail();
@@ -177,101 +180,10 @@ class UsersCLI {
     }
   }
 
-  /// Retrieve a user, with email and password
-  void optionForgotRetrieveUser() async {
-    clear();
-
-    try {
-      askEmail();
-      var response = await _usersWebService.forgotUser(_email);
-
-      if (response.statusCode == 409) {
-        _response = 'response: ${response.statusCode}';
-      } else {
-        _response = 'response: ${response.body}';
-      }
-    } catch (e) {
-      _response = e.toString();
-      throw ('forgotUser');
-    }
-
-    try {
-      askHash();
-      askPassword();
-      var response = await _usersWebService.retrieveUser(_hash, _password);
-
-      if (response.statusCode == 409) {
-        _response = 'response: ${response.statusCode}';
-      } else {
-        _response = 'response: ${response.body}';
-      }
-    } catch (e) {
-      _response = e.toString();
-      throw ('retrieveUser');
-    }
-  }
-
-  /// Update a user
-  void optionUpdateUser() async {
-    clear();
-    try {
-      askId();
-      askName();
-      askEmail();
-      askPassword();
-      var response = await _usersWebService.updateUser(
-          _id, _name, _email, _password, _jwt);
-
-      if (response.statusCode == 409) {
-        _response = 'response: ${response.statusCode}';
-      } else {
-        _response = 'response: ${response.body}';
-      }
-    } catch (e) {
-      _response = e.toString();
-      throw ('updateUser');
-    }
-  }
-
-  /// Delete a user
-  void optionDeleteUser() async {
-    clear();
-    try {
-      askEmail();
-      var response = await _usersWebService.deleteUser(_email);
-
-      if (response.statusCode == 409) {
-        _response = 'response: ${response.statusCode}';
-      } else {
-        _response = 'response: ${response.body}';
-      }
-    } catch (e) {
-      _response = e.toString();
-      throw ('deleteUser');
-    }
-  }
-
-  /// List a user
-  void optionListUser() async {
-    clear();
-    try {
-      askId();
-      var response = await _usersWebService.listUser(_id, _jwt);
-
-      if (response.statusCode == 409) {
-        _response = 'response: ${response.statusCode}';
-      } else {
-        _response = 'response: ${response.body}';
-      }
-    } catch (e) {
-      _response = e.toString();
-      throw ('listUser');
-    }
-  }
-
   /// Send a email to your email address containing the new password
   Future<Response> optionRecoverPassword() async {
     clear();
+    print('Recovery Password:');
     try {
       askEmail();
 
@@ -280,7 +192,8 @@ class UsersCLI {
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
       } else {
-        _response = 'response: ${response.body}';
+        // returns 204 (no content) if ok
+        _response = 'response: ${response.statusCode}';
       }
       return response;
     } catch (e) {
@@ -289,9 +202,10 @@ class UsersCLI {
     }
   }
 
-  /// Changes the email of a user
+  /// Changes the e-mail of a user
   Future<Response> optionUpdateEmail() async {
     clear();
+    print('Update E-mail:');
     try {
       askJWT();
       askEmail();
@@ -316,17 +230,22 @@ class UsersCLI {
   /// Update the password of a user
   Future<Response> optionUpdatePassword() async {
     clear();
+    print('Update Password:');
     try {
+      askJWT();
       askEmail();
-      var password = prompts.get('old password: ', defaultsTo: '');
+      askPassword();
       var newPassword = prompts.get('new password: ', defaultsTo: '');
 
       var response =
-          await _userUC.updatePassword(_email, password, newPassword);
+          await _userUC.updatePassword(_email, _password, newPassword, _jwt);
+
+      print(response.statusCode);
 
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
       } else {
+        _password = newPassword;
         _response = 'response: ${response.body}';
       }
       return response;
@@ -338,12 +257,12 @@ class UsersCLI {
 
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
+    print('Configure:');
     askHost();
     askPort();
     askSecurity();
 
     _usersWebService.changeServiceConnection(_security, _host, _port);
-
     _response = 'Users endpoint: ' + _usersWebService.wsURL;
   }
 
@@ -379,7 +298,7 @@ class UsersCLI {
 
   /// ask about jwt
   void askJWT() {
-    _jwt = prompts.get('JWT: ', defaultsTo: _jwt);
+    _jwt = prompts.get('JWT-: ', defaultsTo: _jwt);
   }
 
   void askHash() {

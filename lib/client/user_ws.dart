@@ -87,9 +87,12 @@ class UsersWebService extends BaseClient {
 
   /// Lists a user in the users services and returns [Future<http.Response>]
   Future<http.Response> updatePassword(
-      String email, String password, String newPassword) {
+      String email, String password, String newPassword, String jwt) {
     var url = wsURL + 'update' + '/' + 'password';
-    return http.put(Uri.parse(url), body: {
+
+    return http.put(Uri.parse(url), headers: {
+      HttpHeaders.authorizationHeader: 'Bearer ' + jwt
+    }, body: {
       'email': email,
       'password': password,
       'newPassword': newPassword

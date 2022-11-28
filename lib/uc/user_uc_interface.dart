@@ -27,10 +27,10 @@ abstract class UserUCInterface {
 
   void changeServiceConnection(bool https, String host, String port);
 
-  /// Change an user password in the service using [email], [password] and
-  /// [newPassword]
+  /// Change an user password in the service using [email], [password],
+  /// [newPassword] and [jwt]
   Future<Response> updatePassword(
-      String email, String password, String newPassword);
+      String email, String password, String newPassword, String jwt);
 
   /// Send a new password to the [email]
   Future<Response> recoverPassword(String email);
