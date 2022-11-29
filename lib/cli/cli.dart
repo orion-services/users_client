@@ -10,8 +10,6 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
-
-// ignore_for_file: await_only_futures
 import 'dart:io';
 import 'package:yaml/yaml.dart';
 import 'package:http/http.dart';
@@ -62,6 +60,8 @@ class UsersCLI {
   Future<bool> menu() async {
     // clear console
     clear();
+    var version = await readVersion();
+    print('Users CLI ' + version);
 
     // print the response of last operation
     print(_response);
@@ -81,10 +81,7 @@ class UsersCLI {
       'Exit'
     ];
 
-    // configuring the options
-    var version = await readVersion();
-    var menuOptions = 'Options - ' + version;
-    var cli = prompts.choose(menuOptions, options, defaultsTo: options[0]);
+    var cli = prompts.choose('Menu', options, defaultsTo: options[0]);
 
     // printing the menu
     print(cli);
@@ -320,6 +317,7 @@ class UsersCLI {
     _id = prompts.get('ID: ', defaultsTo: _id);
   }
 
+  /// Reads pubspec version
   Future<String> readVersion() async {
     try {
       final file = await File('pubspec.yaml');
