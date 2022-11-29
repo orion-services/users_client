@@ -32,6 +32,7 @@
 
 ## 0.1.8
 
-- Removed the Web App of the package
+- Added JWT support to follow the new endpoints in Orion Users
 - Added the package version in the CLI menu
-- Some improvements in CLI messages
+- Some messages improvements in CLI
+- Removed the old Web App of the package
