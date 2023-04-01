@@ -15,7 +15,7 @@ import 'package:users_client/client/base_client.dart';
 import 'package:http/http.dart' as http;
 
 /// Abstracts the endpoints of the users service
-class UsersWebService extends BaseClient {
+class OrionUsers extends BaseClient {
   /// Creates a user in the users services and returns [Future<http.Response>]
   Future<http.Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
@@ -72,9 +72,11 @@ class UsersWebService extends BaseClient {
   }
 
   /// Deletes a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> deleteUser(String email) {
+  Future<http.Response> deleteUser(String email, String jwt) {
     var url = wsURL + 'delete';
-    return http.delete(Uri.parse(url), body: {'email': email});
+    return http.delete(Uri.parse(url),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
+        body: {'email': email});
   }
 
   /// Lists a user in the users services and returns [Future<http.Response>]

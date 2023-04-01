@@ -34,5 +34,11 @@
 
 - Added JWT support to follow the new endpoints in Orion Users
 - Added the package version in the CLI menu
-- Some messages improvements in CLI
+- Some messages enhancements in CLI
 - Removed the old Web App of the package
+
+## 0.1.9
+
+- Delete operation
+- New unit tests
+- Enhancements like new class names

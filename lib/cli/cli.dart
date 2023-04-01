@@ -10,6 +10,7 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
+import 'dart:convert';
 import 'dart:io';
 import 'package:yaml/yaml.dart';
 import 'package:http/http.dart';
@@ -43,7 +44,7 @@ class UsersCLI {
   String _id = '';
 
   // the User Web Service client
-  late UsersWebService _usersWebService;
+  late OrionUsers _users;
 
   // Use cases
   late UserUCInterface _userUC;
@@ -52,8 +53,8 @@ class UsersCLI {
   late String _jwt;
 
   UsersCLI() {
-    _usersWebService = UsersWebService();
-    _userUC = UserUC();
+    _users = OrionUsers();
+    _userUC = UsersClient();
   }
 
   // Prints the menu
@@ -73,10 +74,11 @@ class UsersCLI {
     var options = [
       'Create user',
       'Authenticate',
-      'Create and Authenticate',
-      'Recover Password',
-      'Update E-mail',
-      'Update Password',
+      'Create and authenticate',
+      'Recover password',
+      'Update e-mail',
+      'Update password',
+      'Delete user',
       'Configure',
       'Exit'
     ];
@@ -101,8 +103,10 @@ class UsersCLI {
       } else if (cli == options[5]) {
         await optionUpdatePassword();
       } else if (cli == options[6]) {
-        optionConfigure();
+        await optionDeleteUser();
       } else if (cli == options[7]) {
+        optionConfigure();
+      } else if (cli == options[8]) {
         loop = false;
         clear();
       }
@@ -116,7 +120,7 @@ class UsersCLI {
   /// Create a user
   Future<Response> optionCreateUser() async {
     clear();
-    print('Create User:');
+    print('Create a user:');
     try {
       askName();
       askEmail();
@@ -157,7 +161,7 @@ class UsersCLI {
   /// Creates and authenticates a user
   Future<Response> optionCreateAuthenticate() async {
     clear();
-    print('Create and Authenticate:');
+    print('Create and authenticate:');
     try {
       askName();
       askEmail();
@@ -169,6 +173,7 @@ class UsersCLI {
         _response = 'response: ${response.statusCode}';
       } else {
         _response = 'response: ${response.body}';
+        _jwt = jsonDecode(response.body)['token'];
       }
       return response;
     } catch (e) {
@@ -180,7 +185,7 @@ class UsersCLI {
   /// Send a email to your email address containing the new password
   Future<Response> optionRecoverPassword() async {
     clear();
-    print('Recovery Password:');
+    print('Recovery password:');
     try {
       askEmail();
 
@@ -202,7 +207,7 @@ class UsersCLI {
   /// Changes the e-mail of a user
   Future<Response> optionUpdateEmail() async {
     clear();
-    print('Update E-mail:');
+    print('Update e-mail:');
     try {
       askJWT();
       askEmail();
@@ -227,7 +232,7 @@ class UsersCLI {
   /// Update the password of a user
   Future<Response> optionUpdatePassword() async {
     clear();
-    print('Update Password:');
+    print('Update password:');
     try {
       askJWT();
       askEmail();
@@ -236,8 +241,6 @@ class UsersCLI {
 
       var response =
           await _userUC.updatePassword(_email, _password, newPassword, _jwt);
-
-      print(response.statusCode);
 
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
@@ -252,6 +255,25 @@ class UsersCLI {
     }
   }
 
+  Future<Response> optionDeleteUser() async {
+    clear();
+    print('Delete user:');
+    try {
+      askEmail();
+      var response = await _userUC.deleteUser(_email, _jwt);
+
+      if (response.statusCode == 204) {
+        _response = 'response: 204 - user deleted';
+      } else {
+        _response = 'response: ${response.body}';
+      }
+      return response;
+    } catch (e) {
+      _response = e.toString();
+      throw ('deleteUser');
+    }
+  }
+
   /// Executes the menu option do configure host and port of the server
   void optionConfigure() {
     print('Configure:');
@@ -259,8 +281,8 @@ class UsersCLI {
     askPort();
     askSecurity();
 
-    _usersWebService.changeServiceConnection(_security, _host, _port);
-    _response = 'Users endpoint: ' + _usersWebService.wsURL;
+    _users.changeServiceConnection(_security, _host, _port);
+    _response = 'Users endpoint: ' + _users.wsURL;
   }
 
   /// clear the console
@@ -320,7 +342,7 @@ class UsersCLI {
   /// Reads pubspec version
   Future<String> readVersion() async {
     try {
-      final file = await File('pubspec.yaml');
+      final file = File('pubspec.yaml');
       final contents = await file.readAsString();
       Map yaml = loadYaml(contents);
       return yaml['version'];

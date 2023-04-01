@@ -15,11 +15,11 @@ import 'package:http/http.dart';
 import 'package:users_client/client/user_ws.dart';
 import 'package:users_client/uc/user_uc_interface.dart';
 
-class UserUC implements UserUCInterface {
-  late UsersWebService _service;
+class UsersClient implements UserUCInterface {
+  late OrionUsers _service;
 
-  UserUC() {
-    _service = UsersWebService();
+  UsersClient() {
+    _service = OrionUsers();
   }
 
   /// Creates a user in the service with the arguments [name], [email] and
@@ -52,14 +52,6 @@ class UserUC implements UserUCInterface {
     }
   }
 
-  /// [bool https] indicates if the client will use http or https
-  /// [String host] the host of the service
-  /// [String port] the port used by the service
-  @override
-  void changeServiceConnection(bool https, String host, String port) {
-    _service.changeServiceConnection(https, host, port);
-  }
-
   @override
   Future<Response> createAuthenticate(
       String name, String email, String password) {
@@ -76,6 +68,28 @@ class UserUC implements UserUCInterface {
         return _service.createAuthenticate(name, email, password);
       }
     }
+  }
+
+  @override
+  Future<Response> recoverPassword(String email) {
+    if (email.isEmpty) {
+      throw Exception('The E-mail must not be empty');
+    }
+    if (!EmailValidator.validate(email)) {
+      throw Exception('E-mail must be valid');
+    }
+    return _service.recoverPassword(email);
+  }
+
+  @override
+  Future<Response> updateEmail(String email, String newEmail, String jwt) {
+    if (email.isEmpty || newEmail.isEmpty || jwt.isEmpty) {
+      throw Exception('All data must be provided');
+    }
+    if (!EmailValidator.validate(email) || !EmailValidator.validate(newEmail)) {
+      throw Exception('E-mail must be valid');
+    }
+    return _service.updateEmail(email, newEmail, jwt);
   }
 
   @override
@@ -98,35 +112,20 @@ class UserUC implements UserUCInterface {
   }
 
   @override
-  Future<Response> recoverPassword(String email) {
+  Future<Response> deleteUser(String email, String jwt) {
     if (email.isEmpty) {
       throw Exception('The E-mail must not be empty');
     }
     if (!EmailValidator.validate(email)) {
       throw Exception('E-mail must be valid');
     }
-    return _service.recoverPassword(email);
+    return _service.deleteUser(email, jwt);
   }
 
-  @override
-  Future<Response> deleteUser(String email) {
-    if (email.isEmpty) {
-      throw Exception('The E-mail must not be empty');
-    }
-    if (!EmailValidator.validate(email)) {
-      throw Exception('E-mail must be valid');
-    }
-    return _service.deleteUser(email);
-  }
-
-  @override
-  Future<Response> updateEmail(String email, String newEmail, String jwt) {
-    if (email.isEmpty || newEmail.isEmpty || jwt.isEmpty) {
-      throw Exception('All data must be provided');
-    }
-    if (!EmailValidator.validate(email) || !EmailValidator.validate(newEmail)) {
-      throw Exception('E-mail must be valid');
-    }
-    return _service.updateEmail(email, newEmail, jwt);
+  /// [bool https] indicates if the client will use http or https
+  /// [String host] the host of the service
+  /// [String port] the port used by the service
+  void changeServiceConnection(bool https, String host, String port) {
+    _service.changeServiceConnection(https, host, port);
   }
 }

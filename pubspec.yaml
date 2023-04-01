@@ -1,6 +1,6 @@
 name: users_client
 description: Orion Users service Client.
-version: 0.1.8
+version: 0.1.9
 homepage: https://github.com/orion-services/users_client
 
 environment:
@@ -12,10 +12,10 @@ dependencies:
   web_socket_channel: ^2.2.0
   mockito: ^5.0.7
   email_validator: ^2.0.1
-  yaml: ^3.1.1
 
 dev_dependencies:
   build_runner: ^2.1.11
   build_web_compilers: ^3.2.3
+  lints: ^2.0.1
   pedantic: ^1.8.0
   test: ^1.6.0

@@ -33,7 +33,7 @@ class BaseClient {
   /// [String port] the port used by the service
   BaseClient(
       [this.https = false, this.host = 'localhost', this.port = '8080']) {
-    wsEndpoint = 'user';
+    wsEndpoint = 'users';
     api = 'api';
     changeServiceConnection(https, host, port);
   }

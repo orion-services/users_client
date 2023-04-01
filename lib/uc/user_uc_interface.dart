@@ -17,27 +17,25 @@ abstract class UserUCInterface {
   /// [password]
   Future<Response> createUser(String name, String email, String password);
 
-  /// Creates and authenticates a user in the service with the arguments [name], [email] and
-  /// [password]
-  Future<Response> createAuthenticate(
-      String name, String email, String password);
-
   /// Authenticates an user in the service using [email] and [password]
   Future<Response> authenticate(String email, String password);
 
-  void changeServiceConnection(bool https, String host, String port);
+  /// Creates and authenticates a user in the service with the arguments
+  /// [name], [email] and [password]
+  Future<Response> createAuthenticate(
+      String name, String email, String password);
 
-  /// Change an user password in the service using [email], [password],
+  /// Sends a new password to the [email]
+  Future<Response> recoverPassword(String email);
+
+  /// Updates the user [email] to [newEmail]
+  Future<Response> updateEmail(String email, String newEmail, String jwt);
+
+  /// Changes the user's password in the service using [email], [password],
   /// [newPassword] and [jwt]
   Future<Response> updatePassword(
       String email, String password, String newPassword, String jwt);
 
-  /// Send a new password to the [email]
-  Future<Response> recoverPassword(String email);
-
-  /// Deletes the user that uses the [email]
-  Future<Response> deleteUser(String email);
-
-  /// update the user [email] to [newEmail]
-  Future<Response> updateEmail(String email, String newEmail, String jwt);
+  /// Deletes the user according the [email] and [jwt]
+  Future<Response> deleteUser(String email, String jwt);
 }
