@@ -45,4 +45,4 @@
 
 ## 0.1.10
 
-- Inheritance on User Uc Interface bug fixed
+- Inheritance on UserUCInterface bug fixed

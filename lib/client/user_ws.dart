@@ -101,6 +101,7 @@ class OrionUsers extends BaseClient {
     });
   }
 
+  /// Recoveries the password of the user sending an [e-mail]
   Future<http.Response> recoverPassword(String email) {
     var url = wsURL + 'recoverPassword';
     return http.post(Uri.parse(url), body: {

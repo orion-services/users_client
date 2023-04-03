@@ -22,8 +22,6 @@ class UsersClient implements UserUCInterface {
     _service = OrionUsers();
   }
 
-  /// Creates a user in the service with the arguments [name], [email] and
-  /// [password]
   @override
   Future<Response> createUser(String name, String email, String password) {
     if (name.isEmpty ||
@@ -41,7 +39,6 @@ class UsersClient implements UserUCInterface {
     }
   }
 
-  /// Authenticates an user in the service using [email] and [password]
   @override
   Future<Response> authenticate(String email, String password) {
     if (email.isEmpty || password.isEmpty || !EmailValidator.validate(email)) {
