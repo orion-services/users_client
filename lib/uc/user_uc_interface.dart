@@ -38,4 +38,9 @@ abstract class UserUCInterface {
 
   /// Deletes the user according the [email] and [jwt]
   Future<Response> deleteUser(String email, String jwt);
+
+  /// [bool https] indicates if the client will use http or https
+  /// [String host] the host of the service
+  /// [String port] the port used by the service
+  void changeServiceConnection(bool https, String host, String port);
 }

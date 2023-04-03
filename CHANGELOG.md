@@ -42,3 +42,7 @@
 - Delete operation
 - New unit tests
 - Enhancements like new class names
+
+## 0.1.10
+
+- Inheritance on User Uc Interface bug fixed
