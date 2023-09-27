@@ -10,8 +10,8 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:http/http.dart';
 import 'package:users_client/client/user_ws.dart';
 import 'package:users_client/uc/user_uc_interface.dart';
 

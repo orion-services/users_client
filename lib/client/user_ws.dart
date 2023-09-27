@@ -10,89 +10,88 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:users_client/client/base_client.dart';
-import 'package:http/http.dart' as http;
 
 /// Abstracts the endpoints of the users service
 class OrionUsers extends BaseClient {
   /// Creates a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> createUser(String name, String email, String password) {
+  Future<Response> createUser(String name, String email, String password) {
     var url = wsURL + 'create';
-    return http.post(Uri.parse(url),
+    return post(url,
         body: {'name': name, 'email': email, 'password': password});
   }
 
   /// Creates and authenticates a user in the users services and returns
-  /// [Future<http.Response>]
-  Future<http.Response> createAuthenticate(
+  /// [Future<Response>]
+  Future<Response> createAuthenticate(
       String name, String email, String password) {
     var url = wsURL + 'createAuthenticate';
-    return http.post(Uri.parse(url),
+    return post(url,
         body: {'name': name, 'email': email, 'password': password});
   }
 
-  /// Authenticates the users services and returns [Future<http.Response>]
-  Future<http.Response> authenticate(String email, String password) {
+  /// Authenticates the users services and returns [Future<Response>]
+  Future<Response> authenticate(String email, String password) {
     var url = wsURL + 'authenticate';
-    return http
-        .post(Uri.parse(url), body: {'email': email, 'password': password});
+    return post(url, body: {'email': email, 'password': password});
   }
 
   /// Send a hash by email in the users services and returns
-  /// [Future<http.Response>]
-  Future<http.Response> forgotUser(String email) {
+  /// [Future<Response>]
+  Future<Response> forgotUser(String email) {
     var url = wsURL + 'forgot';
-    return http.post(Uri.parse(url), body: {'email': email});
+    return post(url, body: {'email': email});
   }
 
   /// Retrieve a password in the users services and returns
-  /// [Future<http.Response>]
-  Future<http.Response> retrieveUser(String hash, String password) {
+  /// [Future<Response>]
+  Future<Response> retrieveUser(String hash, String password) {
     var url = wsURL + 'retrieve';
-    return http
-        .post(Uri.parse(url), body: {'hash': hash, 'password': password});
+    return post(url, body: {'hash': hash, 'password': password});
   }
 
-  /// updates a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> updateUser(
+  /// updates a user in the users services and returns [Future<Response>]
+  Future<Response> updateUser(
       String id, String name, String email, String password, String jwt) {
     var url = wsURL + 'update';
-    return http.post(Uri.parse(url),
+    return post(url,
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'id': id, 'name': name, 'email': email, 'password': password});
   }
 
-  /// updates the email from a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> updateEmail(String email, String newEmail, jwt) {
+  /// updates the email from a user in the users services and returns [Future<Response>]
+  Future<Response> updateEmail(String email, String newEmail, jwt) {
     var url = wsURL + 'update/email';
-    return http.put(Uri.parse(url),
+    return put(url,
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'email': email, 'newEmail': newEmail});
   }
 
-  /// Deletes a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> deleteUser(String email, String jwt) {
+  /// Deletes a user in the users services and returns [Future<Response>]
+  Future<Response> deleteUser(String email, String jwt) {
     var url = wsURL + 'delete';
-    return http.delete(Uri.parse(url),
+    return delete(url,
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt},
         body: {'email': email});
   }
 
-  /// Lists a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> listUser(String id, String jwt) {
+  /// Lists a user in the users services and returns [Future<Response>]
+  Future<Response> listUser(String id, String jwt) {
     var url = wsURL + 'list' + '/' + id;
     print(url);
-    return http.get(Uri.parse(url),
+    return get(url,
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + jwt});
   }
 
-  /// Lists a user in the users services and returns [Future<http.Response>]
-  Future<http.Response> updatePassword(
+  /// Lists a user in the users services and returns [Future<Response>]
+  Future<Response> updatePassword(
       String email, String password, String newPassword, String jwt) {
     var url = wsURL + 'update' + '/' + 'password';
 
-    return http.put(Uri.parse(url), headers: {
+    return put(url, headers: {
       HttpHeaders.authorizationHeader: 'Bearer ' + jwt
     }, body: {
       'email': email,
@@ -102,9 +101,9 @@ class OrionUsers extends BaseClient {
   }
 
   /// Recoveries the password of the user sending an [e-mail]
-  Future<http.Response> recoverPassword(String email) {
+  Future<Response> recoverPassword(String email) {
     var url = wsURL + 'recoverPassword';
-    return http.post(Uri.parse(url), body: {
+    return post(url, body: {
       'email': email,
     });
   }
