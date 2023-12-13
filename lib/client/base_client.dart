@@ -10,6 +10,9 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 ///  limitations under the License.
+
+import 'package:dio/dio.dart';
+
 class BaseClient {
   // use https to make a request
   late bool https;
@@ -28,6 +31,8 @@ class BaseClient {
   /// the result url
   late String wsURL;
 
+  late Dio dio;
+
   /// [bool https] indicates if the client will make requests over http or https
   /// [String host] the host of the service
   /// [String port] the port used by the service
@@ -36,6 +41,10 @@ class BaseClient {
     wsEndpoint = 'users';
     api = 'api';
     changeServiceConnection(https, host, port);
+    dio = Dio(BaseOptions(
+      connectTimeout: Duration(seconds: 5),
+      sendTimeout: Duration(seconds: 5),
+    ));
   }
 
   /// Method used to change parameters to connect in users service
@@ -62,5 +71,49 @@ class BaseClient {
   void _createURL() {
     var urlBase = host + ':' + port;
     wsURL = wsURL + urlBase + '/' + api + '/' + wsEndpoint + '/';
+  }
+
+  Future<Response> get(
+    String path, {
+    Map<String, Object?>? headers,
+  }) {
+    return dio.get(path,
+        options: Options(
+          headers: headers,
+          responseType: ResponseType.plain,
+        ));
+  }
+
+  Future<Response> put(String path,
+      {Map<String, Object?>? headers, Object? body}) {
+    return dio.put(path,
+        data: body,
+        options: Options(
+          headers: headers,
+          contentType: Headers.formUrlEncodedContentType,
+          responseType: ResponseType.plain,
+        ));
+  }
+
+  Future<Response> post(String path,
+      {Map<String, Object?>? headers, Object? body}) {
+    return dio.post(path,
+        data: body,
+        options: Options(
+          headers: headers,
+          contentType: Headers.formUrlEncodedContentType,
+          responseType: ResponseType.plain,
+        ));
+  }
+
+  Future<Response> delete(String path,
+      {Map<String, Object?>? headers, Object? body}) {
+    return dio.delete(path,
+        data: body,
+        options: Options(
+          headers: headers,
+          contentType: Headers.formUrlEncodedContentType,
+          responseType: ResponseType.plain,
+        ));
   }
 }

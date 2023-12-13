@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:http/http.dart' as _i2;
+import 'package:dio/dio.dart' as dio;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:users_client/client/user_ws.dart' as _i3;
 
@@ -20,7 +20,7 @@ import 'package:users_client/client/user_ws.dart' as _i3;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeResponse_0 extends _i1.SmartFake implements _i2.Response {
+class _FakeResponse_0 extends _i1.SmartFake implements dio.Response {
   _FakeResponse_0(
     Object parent,
     Invocation parentInvocation,
@@ -117,7 +117,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
         returnValueForMissingStub: null,
       );
   @override
-  _i4.Future<_i2.Response> createUser(
+  _i4.Future<dio.Response> createUser(
     String? name,
     String? email,
     String? password,
@@ -131,7 +131,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             password,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #createUser,
@@ -142,9 +142,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> createAuthenticate(
+  _i4.Future<dio.Response> createAuthenticate(
     String? name,
     String? email,
     String? password,
@@ -158,7 +158,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             password,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #createAuthenticate,
@@ -169,9 +169,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> authenticate(
+  _i4.Future<dio.Response> authenticate(
     String? email,
     String? password,
   ) =>
@@ -183,7 +183,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             password,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #authenticate,
@@ -193,23 +193,23 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> forgotUser(String? email) => (super.noSuchMethod(
+  _i4.Future<dio.Response> forgotUser(String? email) => (super.noSuchMethod(
         Invocation.method(
           #forgotUser,
           [email],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #forgotUser,
             [email],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> retrieveUser(
+  _i4.Future<dio.Response> retrieveUser(
     String? hash,
     String? password,
   ) =>
@@ -221,7 +221,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             password,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #retrieveUser,
@@ -231,9 +231,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> updateUser(
+  _i4.Future<dio.Response> updateUser(
     String? id,
     String? name,
     String? email,
@@ -251,7 +251,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             jwt,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #updateUser,
@@ -264,9 +264,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> updateEmail(
+  _i4.Future<dio.Response> updateEmail(
     String? email,
     String? newEmail,
     dynamic jwt,
@@ -280,7 +280,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             jwt,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #updateEmail,
@@ -291,9 +291,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> deleteUser(
+  _i4.Future<dio.Response> deleteUser(
     String? email,
     String? jwt,
   ) =>
@@ -305,7 +305,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             jwt,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #deleteUser,
@@ -315,9 +315,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> listUser(
+  _i4.Future<dio.Response> listUser(
     String? id,
     String? jwt,
   ) =>
@@ -329,7 +329,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             jwt,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #listUser,
@@ -339,9 +339,9 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> updatePassword(
+  _i4.Future<dio.Response> updatePassword(
     String? email,
     String? password,
     String? newPassword,
@@ -357,7 +357,7 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             jwt,
           ],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #updatePassword,
@@ -369,22 +369,22 @@ class MockOrionUsers extends _i1.Mock implements _i3.OrionUsers {
             ],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
-  _i4.Future<_i2.Response> recoverPassword(String? email) =>
+  _i4.Future<dio.Response> recoverPassword(String? email) =>
       (super.noSuchMethod(
         Invocation.method(
           #recoverPassword,
           [email],
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i4.Future<dio.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #recoverPassword,
             [email],
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i4.Future<dio.Response>);
   @override
   void changeServiceConnection(
     bool? https,

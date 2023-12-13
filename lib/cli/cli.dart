@@ -10,10 +10,11 @@
 /// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
+
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:yaml/yaml.dart';
-import 'package:http/http.dart';
 import 'package:users_client/client/user_ws.dart';
 import 'package:prompts/prompts.dart' as prompts;
 import 'package:users_client/uc/user_uc_interface.dart';
@@ -131,7 +132,7 @@ class UsersCLI {
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
       } else {
-        _response = 'response: ${response.body}';
+        _response = 'response: ${response.data}';
       }
       return response;
     } catch (e) {
@@ -149,7 +150,7 @@ class UsersCLI {
       askPassword();
 
       var response = await _userUC.authenticate(_email, _password);
-      _jwt = response.body;
+      _jwt = response.data;
       _response = '$_jwt';
       return response;
     } catch (e) {
@@ -172,8 +173,8 @@ class UsersCLI {
       if (response.statusCode == 400) {
         _response = 'response: ${response.statusCode}';
       } else {
-        _response = 'response: ${response.body}';
-        _jwt = jsonDecode(response.body)['token'];
+        _response = 'response: ${response.data}';
+        _jwt = jsonDecode(response.data)['token'];
       }
       return response;
     } catch (e) {
@@ -219,8 +220,8 @@ class UsersCLI {
         return response;
       } else {
         _email = newEmail;
-        _jwt = response.body;
-        _response = 'response: ${response.body}';
+        _jwt = response.data;
+        _response = 'response: ${response.data}';
         return response;
       }
     } catch (e) {
@@ -246,7 +247,7 @@ class UsersCLI {
         _response = 'response: ${response.statusCode}';
       } else {
         _password = newPassword;
-        _response = 'response: ${response.body}';
+        _response = 'response: ${response.data}';
       }
       return response;
     } catch (e) {
@@ -265,7 +266,7 @@ class UsersCLI {
       if (response.statusCode == 204) {
         _response = 'response: 204 - user deleted';
       } else {
-        _response = 'response: ${response.body}';
+        _response = 'response: ${response.data}';
       }
       return response;
     } catch (e) {

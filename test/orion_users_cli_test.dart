@@ -12,7 +12,7 @@
 ///  limitations under the License.
 import 'dart:async';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -70,7 +70,7 @@ void main() {
   test('Create and authenticates a user', () {
     var ws = MockOrionUsers();
     when(ws.createUser('Orion', 'orion@test.com', '12345678'))
-        .thenAnswer((_) => Future<Response>.value(Response('body', 200)));
+        .thenAnswer((_) => Future<Response>.value(Response(requestOptions: RequestOptions(path: ''), data: '', headers: Headers(), statusCode: 200)));
 
     UserUCInterface uc = UsersClient();
     var response = uc.createAuthenticate('Orion', 'orion@test.com', '12345678');
