@@ -14,7 +14,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:yaml/yaml.dart';import 'package:users_client/client/user_ws.dart';
+import 'package:yaml/yaml.dart';
+import 'package:users_client/client/user_ws.dart';
 import 'package:prompts/prompts.dart' as prompts;
 import 'package:users_client/uc/user_uc_interface.dart';
 import 'package:users_client/uc/user_uc.dart';
